@@ -25,7 +25,7 @@ const AppStack = () => {
         drawerInactiveTintColor: "#333",
         drawerLabelStyle: {
           marginLeft: -10,
-          fontFamily: "RobotoSemiBold",
+          fontFamily: "RobotoMedium",
           fontSize: 15,
         },
       }}

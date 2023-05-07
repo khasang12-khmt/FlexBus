@@ -8,7 +8,7 @@ export default function App() {
     RobotoRegular: require("./assets/fonts/Roboto-Regular.ttf"),
     RobotoLight: require("./assets/fonts/Roboto-Light.ttf"),
     RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
-    RobotoSemiBold: require("./assets/fonts/Roboto-Medium.ttf"),
+    RobotoMedium: require("./assets/fonts/Roboto-Medium.ttf"),
   });
 
   if (!loaded) {
