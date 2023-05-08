@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { Button } from "react-native-paper";
 import CustomHeader from '../../components/CustomHeader'
 import {
@@ -10,20 +10,24 @@ import {
 import AutoComplete from '../../components/Map/AutoComplete';
 import FindRouteModal from '../../components/Map/FindRouteModal';
 
+type LocationName = {
+  location_name: string | undefined;
+};
 type Coord = {
-  location_name: string|undefined;
   latitude: number;
   longitude: number;
 };
+type CoordName = LocationName & Coord;
 
 const HomeScreen = () => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [currentLocation, setCurrentLocation] = useState<Coord>({
+    const [route, setRoute] = useState<Coord[]>([])
+    const [currentLocation, setCurrentLocation] = useState<CoordName>({
       location_name: "",
       latitude: 0,
       longitude: 0,
     });
-    const [destination, setDestination] = useState<Coord>({
+    const [destination, setDestination] = useState<CoordName>({
       location_name: "",
       latitude: 0,
       longitude: 0,
@@ -55,6 +59,7 @@ const HomeScreen = () => {
         console.log("Permission to access location was denied");
       }
     };
+    
     useEffect(() => {
       requestLocationPermission();
       getCurrentLocation();
@@ -68,7 +73,6 @@ const HomeScreen = () => {
       {/* Map + Current Location */}
       {currentLocation && (
         <MapView
-          /* style={modalVisible?{...styles.map,zIndex:5}:styles.map} */
           style={styles.map}
           ref={mapRef}
           initialRegion={{
@@ -82,6 +86,7 @@ const HomeScreen = () => {
           showsCompass={true}
           scrollEnabled={true}
           zoomEnabled={true}
+          zoomControlEnabled={true}
           pitchEnabled={true}
           rotateEnabled={true}
           mapPadding={{ top: 80, right: 0, left: 0, bottom: 0 }}
@@ -102,6 +107,14 @@ const HomeScreen = () => {
               coordinate={destination}
             />
           )}
+          {route.length != 0 && (
+            <Polyline
+              coordinates={route}
+              strokeColor="#001296"
+              strokeWidth={5}
+              zIndex={10000}
+            />
+          )}
         </MapView>
       )}
 
@@ -112,9 +125,17 @@ const HomeScreen = () => {
       />
 
       {/* Find Route Modal */}
-      <View className={`mt-auto ${modalVisible?"h-full":"h-16"}`}>
-        <FindRouteModal visible={modalVisible} setVisible={setModalVisible}/>
-      </View>
+      {destination.latitude !== 0 && (
+        <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
+          <FindRouteModal
+            fromLocation={currentLocation}
+            toLocation={destination}
+            visible={modalVisible}
+            setVisible={setModalVisible}
+            setRoute={setRoute}
+          />
+        </View>
+      )}
     </View>
   );
 }
