@@ -2,6 +2,7 @@ import { View } from "react-native";
 import { Menu, Searchbar } from "react-native-paper";
 import React, { useState } from "react";
 import axios from "axios";
+import _ from "lodash";
 import { StyleSheet } from "react-native";
 
 type Coord = {
@@ -25,16 +26,17 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [data, setData] = useState<Location[]>()
-  console.log(menuVisible);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const MAP_API_KEY = "pk.9909d2d04fae570df4839a65f0334c28";
-  function getAutoComplete(query: string) {
+  //Allow 1 API call Per Second
+  const getAutoComplete = _.debounce(async (query: string) => {
     let str = `https://api.locationiq.com/v1/autocomplete?key=${MAP_API_KEY}&q=${query}&limit=3&dedupe=1`;
     axios
       .get(str)
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
-  }
+    // Handle response data here
+  }, 2000);
 
   return (
     <View>

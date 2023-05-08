@@ -1,15 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { Searchbar, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import CustomHeader from '../../components/CustomHeader'
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
 } from "expo-location";
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import axios from 'axios';
 import AutoComplete from '../../components/Map/AutoComplete';
+import FindRouteModal from '../../components/Map/FindRouteModal';
 
 type Coord = {
   location_name: string|undefined;
@@ -18,6 +17,7 @@ type Coord = {
 };
 
 const HomeScreen = () => {
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [currentLocation, setCurrentLocation] = useState<Coord>({
       location_name: "",
       latitude: 0,
@@ -34,9 +34,9 @@ const HomeScreen = () => {
       mapRef?.current?.animateToRegion({
         latitude: destination.latitude,
         longitude: destination.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
-        });
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      });
     }
 
     useEffect(()=>{
@@ -68,6 +68,7 @@ const HomeScreen = () => {
       {/* Map + Current Location */}
       {currentLocation && (
         <MapView
+          /* style={modalVisible?{...styles.map,zIndex:5}:styles.map} */
           style={styles.map}
           ref={mapRef}
           initialRegion={{
@@ -110,17 +111,10 @@ const HomeScreen = () => {
         onChange={(data) => setDestination(data)}
       />
 
-      {/* Find Route Button */}
-      {currentLocation && (
-        <Button
-          className="mt-auto mb-3 flex items-center justify-center flex-row mx-auto bg-[#001356] text-white"
-          icon="map-marker-path"
-          mode="elevated"
-          textColor="#fff"
-        >
-          <Text className="text-white">Find Route</Text>
-        </Button>
-      )}
+      {/* Find Route Modal */}
+      <View className={`mt-auto ${modalVisible?"h-full":"h-16"}`}>
+        <FindRouteModal visible={modalVisible} setVisible={setModalVisible}/>
+      </View>
     </View>
   );
 }
