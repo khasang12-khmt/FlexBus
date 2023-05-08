@@ -7,6 +7,8 @@ import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
 //import { AuthContext } from "../context/AuthContext";
 
+const Stack = createNativeStackNavigator();
+
 const AppNav = () => {
   //const { isLoading, userToken } = useContext(AuthContext);
   /* if (isLoading) {
@@ -19,7 +21,20 @@ const AppNav = () => {
   return (
     <NavigationContainer>
       {/* {userToken !== null ? <AppStack /> : <AuthStack />} */}
-      <AppStack/>
+      {/* <AuthStack/> */}
+      {/* <AppStack/> */}
+      <Stack.Navigator>
+        <Stack.Screen
+          name="AuthStack"
+          component={AuthStack}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AppStack"
+          component={AppStack}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
