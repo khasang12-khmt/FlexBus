@@ -60,7 +60,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
 
         // Log the bus routes and stops
         console.log("Bus routes:");
-        if(busSteps.length==0) console.log("No bus routes found");
+        if(!busSteps || busSteps.length==0) console.log("No bus routes found");
         busSteps.forEach((step: any) => {
           console.log(step.transit_details.line.short_name);
           console.log("From:", step.transit_details.departure_stop.name);
