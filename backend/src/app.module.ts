@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { BookingModule } from './booking/booking.module';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -13,6 +15,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
+    BookingModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],
