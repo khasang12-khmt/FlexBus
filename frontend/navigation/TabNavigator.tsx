@@ -5,6 +5,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import HomeScreen from "../screens/Home/HomeScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 import HistoryScreen from "../screens/History/HistoryScreen";
+import HomeStack from "./HomeStack";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -28,7 +29,7 @@ const TabNavigator = () => {
         >
         <Tab.Screen
             name="HomeStack"
-            component={HomeScreen}
+            component={HomeStack}
             options={{
             tabBarLabel: "Home",
             tabBarIcon: ({ color }) => (

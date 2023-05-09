@@ -9,47 +9,75 @@ import {
   TextInput
 } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
-import { MAP_API_KEY } from '../../config/config';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+type FindRouteModalProps = {
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  navigation: NavigationProp<any>;
+};
+
+type LocationName = {
+  location_name: string | undefined;
+};
 type Coord = {
   latitude: number;
   longitude: number;
 };
-type LocationName = {
-  location_name: string | undefined;
-};
-type FindRouteModalProps = {
-  fromLocation: Coord & LocationName;
-  toLocation: Coord & LocationName;
-  visible: boolean;
-  setVisible: (arg: boolean) => void;
-  setRoute: (arg: Coord[]) => void;
-};
+type CoordName = LocationName & Coord;
 
-const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,setRoute,fromLocation,toLocation}) => {
+const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navigation}) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
   const [selectedValue, setSelectedValue] = useState("0");
+  const [fromLocation, setFromLocation] = useState<CoordName>({
+    location_name: "",
+    latitude: 0,
+    longitude: 0,
+  });
+  const [toLocation, setToLocation] = useState<CoordName>({
+    location_name: "",
+    latitude: 0,
+    longitude: 0,
+  });
 
   const handleFind = () => {
-    fetchRoute();
+    navigation.navigate("Route", { fromLocation, toLocation });
     hideModal();
   };
 
-  const fetchRoute = async () => {
-    const response = await fetch(
-      `https://us1.locationiq.com/v1/directions/driving/${fromLocation.longitude},${fromLocation.latitude};${toLocation.longitude},${toLocation.latitude}?key=${MAP_API_KEY}&steps=true&alternatives=true&geometries=polyline&overview=full`
-    );
-    const data = await response.json();
-    const shape = data.routes[0].legs[0].steps;
+  const getLocationData = async (msg: string) => {
+    try {
+      // Get the location data from AsyncStorage
+      const locationDataString = await AsyncStorage?.getItem("locationData");
 
-    const coordinates = shape?.map((point: any) => {
-      const [lat, lng] = point.maneuver.location;
-      return { latitude: parseFloat(lng), longitude: parseFloat(lat) };
-    });
+      if (!locationDataString) {
+        return null;
+      }
 
-    setRoute(coordinates);
+      // Parse the location data string to an object
+      const locationData = JSON.parse(locationDataString);
+
+      if(msg==="from"){
+        setFromLocation({
+          ...fromLocation,
+          ...locationData,
+          location_name: "Current Location",
+        });
+      }
+      else{
+        console.log(111);
+        setToLocation({
+          ...toLocation,
+          ...locationData,
+          location_name: "Current Location",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -64,15 +92,24 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,setR
           <TextInput
             label="From [Departure]"
             mode="flat"
-            value={"Current Location" || fromLocation.location_name}
-            /* onChangeText={setFromLocation} */
-            selectionColor="#001356"
+            value={fromLocation.location_name}
             textColor="#001356"
+            onChangeText={(text) =>
+              setFromLocation({ ...fromLocation, location_name: text })
+            }
             left={
               <TextInput.Icon
-                icon="location-enter"
+                icon="map-marker"
                 containerColor="white"
                 size={20}
+              />
+            }
+            right={
+              <TextInput.Icon
+                icon="crosshairs"
+                containerColor="white"
+                size={20}
+                onPress={() => getLocationData("from")}
               />
             }
             theme={{ roundness: 20 }}
@@ -86,20 +123,29 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,setR
             contentStyle={{ backgroundColor: "#fff", borderBottomWidth: 0 }}
             underlineStyle={{ borderColor: "#001356", borderBottomWidth: 0 }}
             underlineColor="transparent"
-            activeUnderlineColor="#001356"
+            activeUnderlineColor="#94A6FD"
           />
           {/* To Input */}
           <TextInput
             label="To [Destination]"
             mode="flat"
             value={toLocation.location_name}
-            /* onChangeText={setToLocation} */
-            selectionColor="#001356"
+            onChangeText={(text) =>
+              setToLocation({ ...toLocation, location_name: text })
+            }
             left={
               <TextInput.Icon
-                icon="location-exit"
+                icon="map-marker"
                 containerColor="white"
                 size={20}
+              />
+            }
+            right={
+              <TextInput.Icon
+                icon="crosshairs"
+                containerColor="white"
+                size={20}
+                onPress={() => getLocationData("to")}
               />
             }
             textColor="#001356"
@@ -116,15 +162,15 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,setR
             contentStyle={{ backgroundColor: "#fff", borderBottomWidth: 0 }}
             underlineStyle={{ borderColor: "#001356", borderBottomWidth: 0 }}
             underlineColor="transparent"
-            activeUnderlineColor="#001356"
+            activeUnderlineColor="#94A6FD"
           />
 
           {/* Maximum Transit */}
-          <View className="w-[75%] rounded-[20px] h-1/6 overflow-hidden">
+          <View className="w-[75%] rounded-[20px] overflow-hidden">
             <Picker
               style={{
                 backgroundColor: "white",
-                height: 40,
+                height: 45,
                 margin: 0,
               }}
               className="mr-2 w-1/3 h-1/4 rounded-xl pb-1"
@@ -145,7 +191,10 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,setR
             className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10"
             onPress={handleFind}
           >
-            <Text className="text-white" style={{ fontFamily: "RobotoMedium", fontSize: 15 }}>
+            <Text
+              className="text-white"
+              style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
+            >
               Find Route
             </Text>
           </Button>

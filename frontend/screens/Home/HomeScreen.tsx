@@ -9,6 +9,8 @@ import {
 } from "expo-location";
 import AutoComplete from '../../components/Map/AutoComplete';
 import FindRouteModal from '../../components/Map/FindRouteModal';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LocationName = {
   location_name: string | undefined;
@@ -21,6 +23,7 @@ type CoordName = LocationName & Coord;
 
 const HomeScreen = () => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const navigation = useNavigation();
     const [route, setRoute] = useState<Coord[]>([])
     const [currentLocation, setCurrentLocation] = useState<CoordName>({
       location_name: "",
@@ -43,15 +46,39 @@ const HomeScreen = () => {
       });
     }
 
+    useEffect(() => {
+      requestLocationPermission();
+      getCurrentLocation();
+    }, []);
+
     useEffect(()=>{
         if(destination.latitude!=0){
             onRegionChange()
         }
     },[destination])
 
+    const saveLocationData = async (locationData:Coord) => {
+      try {
+        // Convert the location data to a string
+        const locationDataString = JSON.stringify(locationData);
+
+        // Save the location data to AsyncStorage
+        await AsyncStorage.setItem("locationData", locationDataString);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const getCurrentLocation = async () => {
       const { coords } = await getCurrentPositionAsync({});
       setCurrentLocation({...coords,location_name:""});
+      saveLocationData(coords)
+      mapRef?.current?.animateToRegion({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      });
     };
     const requestLocationPermission = async () => {
       const { status } = await requestForegroundPermissionsAsync();
@@ -60,10 +87,7 @@ const HomeScreen = () => {
       }
     };
     
-    useEffect(() => {
-      requestLocationPermission();
-      getCurrentLocation();
-    }, []);
+    
 
   return (
     <View className="flex flex-1">
@@ -86,7 +110,6 @@ const HomeScreen = () => {
           showsCompass={true}
           scrollEnabled={true}
           zoomEnabled={true}
-          zoomControlEnabled={true}
           pitchEnabled={true}
           rotateEnabled={true}
           mapPadding={{ top: 80, right: 0, left: 0, bottom: 0 }}
@@ -125,17 +148,13 @@ const HomeScreen = () => {
       />
 
       {/* Find Route Modal */}
-      {destination.latitude !== 0 && (
-        <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
-          <FindRouteModal
-            fromLocation={currentLocation}
-            toLocation={destination}
-            visible={modalVisible}
-            setVisible={setModalVisible}
-            setRoute={setRoute}
-          />
-        </View>
-      )}
+      <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
+        <FindRouteModal
+          visible={modalVisible}
+          setVisible={setModalVisible}
+          navigation={navigation}
+        />
+      </View>
     </View>
   );
 }
