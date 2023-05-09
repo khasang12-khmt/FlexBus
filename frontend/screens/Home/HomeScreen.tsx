@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { Button } from "react-native-paper";
 import CustomHeader from '../../components/CustomHeader'
 import {
@@ -9,21 +9,28 @@ import {
 } from "expo-location";
 import AutoComplete from '../../components/Map/AutoComplete';
 import FindRouteModal from '../../components/Map/FindRouteModal';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+type LocationName = {
+  location_name: string | undefined;
+};
 type Coord = {
-  location_name: string|undefined;
   latitude: number;
   longitude: number;
 };
+type CoordName = LocationName & Coord;
 
 const HomeScreen = () => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [currentLocation, setCurrentLocation] = useState<Coord>({
+    const navigation = useNavigation();
+    const [route, setRoute] = useState<Coord[]>([])
+    const [currentLocation, setCurrentLocation] = useState<CoordName>({
       location_name: "",
       latitude: 0,
       longitude: 0,
     });
-    const [destination, setDestination] = useState<Coord>({
+    const [destination, setDestination] = useState<CoordName>({
       location_name: "",
       latitude: 0,
       longitude: 0,
@@ -39,15 +46,39 @@ const HomeScreen = () => {
       });
     }
 
+    useEffect(() => {
+      requestLocationPermission();
+      getCurrentLocation();
+    }, []);
+
     useEffect(()=>{
         if(destination.latitude!=0){
             onRegionChange()
         }
     },[destination])
 
+    const saveLocationData = async (locationData:Coord) => {
+      try {
+        // Convert the location data to a string
+        const locationDataString = JSON.stringify(locationData);
+
+        // Save the location data to AsyncStorage
+        await AsyncStorage.setItem("locationData", locationDataString);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const getCurrentLocation = async () => {
       const { coords } = await getCurrentPositionAsync({});
       setCurrentLocation({...coords,location_name:""});
+      saveLocationData(coords)
+      mapRef?.current?.animateToRegion({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      });
     };
     const requestLocationPermission = async () => {
       const { status } = await requestForegroundPermissionsAsync();
@@ -55,10 +86,8 @@ const HomeScreen = () => {
         console.log("Permission to access location was denied");
       }
     };
-    useEffect(() => {
-      requestLocationPermission();
-      getCurrentLocation();
-    }, []);
+    
+    
 
   return (
     <View className="flex flex-1">
@@ -68,7 +97,6 @@ const HomeScreen = () => {
       {/* Map + Current Location */}
       {currentLocation && (
         <MapView
-          /* style={modalVisible?{...styles.map,zIndex:5}:styles.map} */
           style={styles.map}
           ref={mapRef}
           initialRegion={{
@@ -102,6 +130,14 @@ const HomeScreen = () => {
               coordinate={destination}
             />
           )}
+          {route.length != 0 && (
+            <Polyline
+              coordinates={route}
+              strokeColor="#001296"
+              strokeWidth={5}
+              zIndex={10000}
+            />
+          )}
         </MapView>
       )}
 
@@ -112,8 +148,12 @@ const HomeScreen = () => {
       />
 
       {/* Find Route Modal */}
-      <View className={`mt-auto ${modalVisible?"h-full":"h-16"}`}>
-        <FindRouteModal visible={modalVisible} setVisible={setModalVisible}/>
+      <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
+        <FindRouteModal
+          visible={modalVisible}
+          setVisible={setModalVisible}
+          navigation={navigation}
+        />
       </View>
     </View>
   );

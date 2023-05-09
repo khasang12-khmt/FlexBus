@@ -9,37 +9,75 @@ import {
   TextInput
 } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type FindRouteModalProps = {
-    visible: boolean;
-    setVisible: (arg:boolean)=>void;
-}
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  navigation: NavigationProp<any>;
+};
 
-const genderList = [
-  {
-    label: "Male",
-    value: "male",
-  },
-  {
-    label: "Female",
-    value: "female",
-  },
-  {
-    label: "Others",
-    value: "others",
-  },
-];
+type LocationName = {
+  location_name: string | undefined;
+};
+type Coord = {
+  latitude: number;
+  longitude: number;
+};
+type CoordName = LocationName & Coord;
 
-const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible}) => {
+const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navigation}) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const [fromLocation, setFromLocation] = useState<string>("");
-  const [toLocation, setToLocation] = useState<string>("");
   const [selectedValue, setSelectedValue] = useState("0");
+  const [fromLocation, setFromLocation] = useState<CoordName>({
+    location_name: "",
+    latitude: 0,
+    longitude: 0,
+  });
+  const [toLocation, setToLocation] = useState<CoordName>({
+    location_name: "",
+    latitude: 0,
+    longitude: 0,
+  });
 
   const handleFind = () => {
-    console.log(fromLocation,toLocation,selectedValue);
+    navigation.navigate("Route", { fromLocation, toLocation });
+    hideModal();
+  };
+
+  const getLocationData = async (msg: string) => {
+    try {
+      // Get the location data from AsyncStorage
+      const locationDataString = await AsyncStorage?.getItem("locationData");
+
+      if (!locationDataString) {
+        return null;
+      }
+
+      // Parse the location data string to an object
+      const locationData = JSON.parse(locationDataString);
+
+      if(msg==="from"){
+        setFromLocation({
+          ...fromLocation,
+          ...locationData,
+          location_name: "Current Location",
+        });
+      }
+      else{
+        console.log(111);
+        setToLocation({
+          ...toLocation,
+          ...locationData,
+          location_name: "Current Location",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -52,48 +90,90 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible}) =>
         >
           {/* From Input */}
           <TextInput
-            label="From"
+            label="From [Departure]"
             mode="flat"
-            value={fromLocation}
-            onChangeText={setFromLocation}
-            selectionColor="#001356"
+            value={fromLocation.location_name}
             textColor="#001356"
+            onChangeText={(text) =>
+              setFromLocation({ ...fromLocation, location_name: text })
+            }
             left={
               <TextInput.Icon
-                icon="location-enter"
+                icon="map-marker"
                 containerColor="white"
                 size={20}
               />
             }
-            style={{ backgroundColor: "#fff", marginBottom: 10 }}
-            contentStyle={{ backgroundColor: "#fff" }}
-            underlineStyle={{ borderColor: "#001356", borderRadius: 20 }}
+            right={
+              <TextInput.Icon
+                icon="crosshairs"
+                containerColor="white"
+                size={20}
+                onPress={() => getLocationData("from")}
+              />
+            }
+            theme={{ roundness: 20 }}
+            style={{
+              overflow: "hidden",
+              backgroundColor: "#fff",
+              marginBottom: 10,
+              height: 50,
+              borderRadius: 20,
+            }}
+            contentStyle={{ backgroundColor: "#fff", borderBottomWidth: 0 }}
+            underlineStyle={{ borderColor: "#001356", borderBottomWidth: 0 }}
+            underlineColor="transparent"
+            activeUnderlineColor="#94A6FD"
           />
           {/* To Input */}
           <TextInput
-            label="To"
+            label="To [Destination]"
             mode="flat"
-            value={toLocation}
-            onChangeText={setToLocation}
-            selectionColor="#001356"
+            value={toLocation.location_name}
+            onChangeText={(text) =>
+              setToLocation({ ...toLocation, location_name: text })
+            }
             left={
               <TextInput.Icon
-                icon="location-exit"
+                icon="map-marker"
                 containerColor="white"
                 size={20}
               />
             }
+            right={
+              <TextInput.Icon
+                icon="crosshairs"
+                containerColor="white"
+                size={20}
+                onPress={() => getLocationData("to")}
+              />
+            }
             textColor="#001356"
-            style={{ backgroundColor: "#fff", marginBottom: 10 }}
-            contentStyle={{ backgroundColor: "#fff" }}
-            underlineStyle={{ borderColor: "#001356" }}
+            theme={{ roundness: 20 }}
+            style={{
+              overflow: "hidden",
+              backgroundColor: "#fff",
+              borderRadius: 20,
+              marginBottom: 10,
+              height: 50,
+              width: "100%",
+              borderBottomWidth: 0,
+            }}
+            contentStyle={{ backgroundColor: "#fff", borderBottomWidth: 0 }}
+            underlineStyle={{ borderColor: "#001356", borderBottomWidth: 0 }}
+            underlineColor="transparent"
+            activeUnderlineColor="#94A6FD"
           />
 
           {/* Maximum Transit */}
-          <View className="w-3/4 rounded-lg">
+          <View className="w-[75%] rounded-[20px] overflow-hidden">
             <Picker
-              style={{ backgroundColor: "white", borderRadius: 50 }}
-              className="mr-2 w-1/2"
+              style={{
+                backgroundColor: "white",
+                height: 45,
+                margin: 0,
+              }}
+              className="mr-2 w-1/3 h-1/4 rounded-xl pb-1"
               placeholder="Maximum Transits"
               selectedValue={selectedValue}
               onValueChange={(itemValue, itemIndex) =>
@@ -108,10 +188,13 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible}) =>
 
           {/* Transits */}
           <Button
-            className="mt-auto flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10"
+            className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10"
             onPress={handleFind}
           >
-            <Text className="text-white" style={{ fontFamily: "RobotoMedium" }}>
+            <Text
+              className="text-white"
+              style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
+            >
               Find Route
             </Text>
           </Button>
