@@ -16,8 +16,8 @@ export class Booking {
   @Prop()
   @IsNotEmpty()
   route: {
-    from: string;
-    to: string;
+    from: Route;
+    to: Route;
   };
 
   @Prop()
@@ -31,3 +31,18 @@ export class Booking {
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
+
+interface Route {
+  place_id: string;
+  licence: string;
+  osm_type: string;
+  osm_id: string;
+  boundingbox: string[];
+  lat: string;
+  lon: string;
+  display_name: string;
+  class: string;
+  type: string;
+  importance: string;
+  icon: string;
+}
