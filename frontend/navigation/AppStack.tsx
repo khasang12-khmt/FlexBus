@@ -9,7 +9,6 @@ import ProfileScreen from "../screens/Profile/ProfileScreen";
 import CustomDrawer from "../components/CustomDrawer";
 
 const Drawer = createDrawerNavigator();
-const Stack = createNativeStackNavigator();
 
 // Sidebar Navigator
 const AppStack = () => {
