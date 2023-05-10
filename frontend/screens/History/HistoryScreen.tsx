@@ -54,6 +54,26 @@ const Data = [
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
         'price': '3000'
+    },
+    {
+        'bus_no': '08',
+        'timestamp': '7:20:47 20/04/2023',
+        'timestart': '5:50',
+        'departure': 'KTX khu A',
+        'timeend': '7:30',
+        'arrival': 'Đh Bách Khoa',
+        'class': 'Bussiness Class',
+        'price': '3000'
+    },
+    {
+        'bus_no': '08',
+        'timestamp': '7:20:47 20/04/2023',
+        'timestart': '5:50',
+        'departure': 'KTX khu A',
+        'timeend': '7:30',
+        'arrival': 'Đh Bách Khoa',
+        'class': 'Bussiness Class',
+        'price': '3000'
     }
 ]
 
@@ -116,8 +136,9 @@ const HistoryScreen = () => {
             </Appbar.Header>
             <ScrollView style={{ margin: 15 }}>
                 <View style={{ backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, paddingTop: 15 }}>
-                    {Data.map(key => 
+                    {Data.map((key, index) => 
                         <TransactionItem
+                            key={index}
                             bus_no={key.bus_no}
                             timestamp={key.timestamp}
                             timestart={key.timestart}
