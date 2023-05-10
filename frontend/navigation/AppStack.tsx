@@ -5,6 +5,7 @@ import { DrawerContentComponentProps, createDrawerNavigator } from "@react-navig
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import TabNavigator from "./TabNavigator";
 import HistoryScreen from "../screens/History/HistoryScreen";
+import DetailScreen from "../screens/TransactionDetail/DetailScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 import CustomDrawer from "../components/CustomDrawer";
 
@@ -41,6 +42,15 @@ const AppStack = () => {
       <Drawer.Screen
         name="History"
         component={HistoryScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="clock" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Detail"
+        component={DetailScreen}
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="clock" size={22} color={color} />
