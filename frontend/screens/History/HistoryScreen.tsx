@@ -54,26 +54,6 @@ const Data = [
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
         'price': '3000'
-    },
-    {
-        'bus_no': '08',
-        'timestamp': '7:20:47 20/04/2023',
-        'timestart': '5:50',
-        'departure': 'KTX khu A',
-        'timeend': '7:30',
-        'arrival': 'Đh Bách Khoa',
-        'class': 'Bussiness Class',
-        'price': '3000'
-    },
-    {
-        'bus_no': '08',
-        'timestamp': '7:20:47 20/04/2023',
-        'timestart': '5:50',
-        'departure': 'KTX khu A',
-        'timeend': '7:30',
-        'arrival': 'Đh Bách Khoa',
-        'class': 'Bussiness Class',
-        'price': '3000'
     }
 ]
 
@@ -128,26 +108,27 @@ const TransactionItem = (props: TransactionItemProps) => {
 const HistoryScreen = () => {
     return (
         <>
-        <Appbar.Header>
-            <Appbar.Content 
-                title="Transaction History"
-                color="#001356"
-                titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
-        </Appbar.Header>
-        <ScrollView style={{ margin: 15 }}>
-            <View style={{ backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, paddingTop: 15 }}>
-                {Data.map(key => <TransactionItem
-                                    bus_no={key.bus_no}
-                                    timestamp={key.timestamp}
-                                    timestart={key.timestart}
-                                    departure={key.departure}
-                                    timeend={key.timeend}
-                                    arrival={key.arrival}
-                                    class={key.class}
-                                    price={key.price}
-                                    />)}
-            </View>
-        </ScrollView>
+            <Appbar.Header>
+                <Appbar.Content 
+                    title="Transaction History"
+                    color="#001356"
+                    titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
+            </Appbar.Header>
+            <ScrollView style={{ margin: 15 }}>
+                <View style={{ backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, paddingTop: 15 }}>
+                    {Data.map(key => 
+                        <TransactionItem
+                            bus_no={key.bus_no}
+                            timestamp={key.timestamp}
+                            timestart={key.timestart}
+                            departure={key.departure}
+                            timeend={key.timeend}
+                            arrival={key.arrival}
+                            class={key.class}
+                            price={key.price}/>
+                    )}
+                </View>
+            </ScrollView>
         </>
   )
 }
