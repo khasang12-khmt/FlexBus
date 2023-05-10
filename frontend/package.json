@@ -11,7 +11,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-native-community/geolocation": "^3.0.6",
-    "@react-native-picker/picker": "^2.4.10",
+    "@react-native-picker/picker": "2.4.8",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/material-bottom-tabs": "^6.2.15",
@@ -36,6 +36,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-onboarding-swiper": "^1.2.0",
     "react-native-pager-view": "6.1.2",
+    "react-native-paper-dates": "^0.16.1",
     "react-native-paper-dropdown": "^1.0.7",
     "react-native-reanimated": "^2.14.4",
     "react-native-tab-view": "^3.5.1",

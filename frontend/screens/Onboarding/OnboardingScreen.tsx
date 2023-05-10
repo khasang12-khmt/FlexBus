@@ -1,8 +1,7 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Onboarding from "react-native-onboarding-swiper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 
 const OnboardingScreen = () => {
   const navigation = useNavigation<any>();
@@ -19,9 +18,18 @@ const OnboardingScreen = () => {
 
   const Next = ({ ...props }) => (
     <View>
-      <MaterialCommunityIcons name="chevron-right" size={40} color={'#001356'} {...props}/>
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={40}
+        color={"#001356"}
+        {...props}
+      />
     </View>
   );
+
+  // const Done = ({ ...props }: { allowFontScaling: boolean }) => (
+  //   <Button title="Get Started" {...props} />
+  // );
 
   return (
     <Onboarding
@@ -30,6 +38,7 @@ const OnboardingScreen = () => {
       bottomBarColor="#FFFFFF"
       NextButtonComponent={Next}
       DotComponent={DotComponent}
+      // DoneButtonComponent={Done}
       pages={[
         {
           backgroundColor: "#FFFFFF",
