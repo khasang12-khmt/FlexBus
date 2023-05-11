@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   Portal,
@@ -8,9 +8,12 @@ import {
   Provider,
   TextInput
 } from "react-native-paper";
+import _ from "lodash";
 import { Picker } from "@react-native-picker/picker";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { GOOGLE_API_KEY } from '../../config/config';
 
 type FindRouteModalProps = {
   visible: boolean;
@@ -43,15 +46,20 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
     longitude: 0,
   });
 
+  useEffect(()=>{
+    getLocationData("from","Home");
+    getLocationData("to", "To");
+  },[visible])
+
   const handleFind = () => {
     navigation.navigate("Route", { fromLocation, toLocation });
     hideModal();
   };
 
-  const getLocationData = async (msg: string) => {
+  const getLocationData = async (msg: string, tag:string) => {
     try {
       // Get the location data from AsyncStorage
-      const locationDataString = await AsyncStorage?.getItem("locationData");
+      const locationDataString = await AsyncStorage?.getItem(tag+"LocationData");
 
       if (!locationDataString) {
         return null;
@@ -59,20 +67,18 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
 
       // Parse the location data string to an object
       const locationData = JSON.parse(locationDataString);
-
       if(msg==="from"){
         setFromLocation({
           ...fromLocation,
           ...locationData,
-          location_name: "Current Location",
+          location_name: tag=="Home"?"Current Location":"To Location",
         });
       }
       else{
-        console.log(111);
         setToLocation({
           ...toLocation,
           ...locationData,
-          location_name: "Current Location",
+          location_name: tag == "Home" ? "Current Location" : "To Location",
         });
       }
     } catch (error) {
@@ -109,7 +115,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
                 icon="crosshairs"
                 containerColor="white"
                 size={20}
-                onPress={() => getLocationData("from")}
+                onPress={() => getLocationData("from","Home")}
               />
             }
             theme={{ roundness: 20 }}
@@ -145,7 +151,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
                 icon="crosshairs"
                 containerColor="white"
                 size={20}
-                onPress={() => getLocationData("to")}
+                onPress={() => getLocationData("to","Home")}
               />
             }
             textColor="#001356"

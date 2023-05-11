@@ -5,6 +5,7 @@ import axios from "axios";
 import _ from "lodash";
 import { StyleSheet } from "react-native";
 import { MAP_API_KEY } from "../../config/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Coord = {
   location_name: string | undefined;
@@ -36,7 +37,7 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
     // Handle response data here
-  }, 2000);
+  }, 1000);
 
   return (
     <View>
