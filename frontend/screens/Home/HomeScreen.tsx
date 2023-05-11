@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import { Button } from "react-native-paper";
-import CustomHeader from '../../components/CustomHeader'
+import CustomHeader from '../../components/CustomLogoHeader'
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
@@ -54,16 +54,18 @@ const HomeScreen = () => {
     useEffect(()=>{
         if(destination.latitude!=0){
             onRegionChange()
+            saveLocationData(destination,"To")
         }
     },[destination])
 
-    const saveLocationData = async (locationData:Coord) => {
+    const saveLocationData = async (locationData:Coord, tag: string) => {
       try {
         // Convert the location data to a string
         const locationDataString = JSON.stringify(locationData);
 
         // Save the location data to AsyncStorage
-        await AsyncStorage.setItem("locationData", locationDataString);
+        await AsyncStorage.setItem(tag + "LocationData", locationDataString);
+        console.log(locationDataString);
       } catch (error) {
         console.error(error);
       }
@@ -72,7 +74,7 @@ const HomeScreen = () => {
     const getCurrentLocation = async () => {
       const { coords } = await getCurrentPositionAsync({});
       setCurrentLocation({...coords,location_name:""});
-      saveLocationData(coords)
+      saveLocationData(coords,"Home")
       mapRef?.current?.animateToRegion({
         latitude: coords.latitude,
         longitude: coords.longitude,
