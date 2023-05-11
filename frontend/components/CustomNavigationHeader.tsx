@@ -11,7 +11,7 @@ type HeaderProps = {
 const CustomNavigationHeader: React.FC<HeaderProps> = ({name,navigateBackEnable}) => {
     const navigation = useNavigation();
   return (
-    <View className="flex flex-row pt-4 pb-4 justify-between items-center bg-gray-200">
+    <View className="flex flex-row pt-4 pb-4 justify-between items-center ">
       {
         navigateBackEnable && 
         <TouchableOpacity className="ml-6" onPress={()=>navigation.goBack()}>
