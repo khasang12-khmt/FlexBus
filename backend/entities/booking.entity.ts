@@ -7,42 +7,26 @@ export type BookingDocument = Booking & Document;
 export class Booking {
   @Prop()
   @IsNotEmpty()
-  user_id: string;
+  userId: string;
+
+  @Prop()
+  busInfo: any;
 
   @Prop()
   @IsNotEmpty()
-  status_booking: string;
+  method: string;
 
   @Prop()
-  @IsNotEmpty()
-  route: {
-    from: Route;
-    to: Route;
-  };
+  status: string;
 
   @Prop()
-  @IsNotEmpty()
-  payment_id: string;
-
-  @Prop()
-  bus_info: {
-    name: string;
+  payment: {
+    status: string;
+    cardNumber: string;
+    cardHolder: string;
+    ccv: number;
+    expiryDate: string;
   };
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
-
-interface Route {
-  place_id: string;
-  licence: string;
-  osm_type: string;
-  osm_id: string;
-  boundingbox: string[];
-  lat: string;
-  lon: string;
-  display_name: string;
-  class: string;
-  type: string;
-  importance: string;
-  icon: string;
-}
