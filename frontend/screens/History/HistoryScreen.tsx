@@ -13,6 +13,11 @@ type TransactionItemProps = {
     'arrival': string,
     'class': string,
     'price': string,
+    'code': string,
+    'payment-method':  {
+        'type': string,
+        'brand': string,
+    }
 }
 
 const Data = [
@@ -24,7 +29,12 @@ const Data = [
         'timeend': '7:30',
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
-        'price': '3000'
+        'price': '3000',
+        'code': '594594992929',
+        'payment-medthod': {
+            'type': 'Credit card',
+            'brand': 'VISA'
+        }
     },
     {
         'bus_no': '08',
@@ -34,7 +44,12 @@ const Data = [
         'timeend': '7:30',
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
-        'price': '3000'
+        'price': '3000',
+        'code': '594594992929',
+        'payment-medthod': {
+            'type': 'Credit card',
+            'brand': 'VISA'
+        }
     },
     {
         'bus_no': '08',
@@ -44,7 +59,12 @@ const Data = [
         'timeend': '7:30',
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
-        'price': '3000'
+        'price': '3000',
+        'code': '594594992929',
+        'payment-medthod': {
+            'type': 'Credit card',
+            'brand': 'VISA'
+        }
     },
     {
         'bus_no': '08',
@@ -54,7 +74,12 @@ const Data = [
         'timeend': '7:30',
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
-        'price': '3000'
+        'price': '3000',
+        'code': '594594992929',
+        'payment-medthod': {
+            'type': 'Credit card',
+            'brand': 'VISA'
+        }
     },
     {
         'bus_no': '08',
@@ -64,7 +89,12 @@ const Data = [
         'timeend': '7:30',
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
-        'price': '3000'
+        'price': '3000',
+        'code': '594594992929',
+        'payment-medthod': {
+            'type': 'Credit card',
+            'brand': 'VISA'
+        }
     },
     {
         'bus_no': '08',
@@ -74,7 +104,12 @@ const Data = [
         'timeend': '7:30',
         'arrival': 'Đh Bách Khoa',
         'class': 'Bussiness Class',
-        'price': '3000'
+        'price': '3000',
+        'code': '594594992929',
+        'payment-medthod': {
+            'type': 'Credit card',
+            'brand': 'VISA'
+        }
     }
 ]
 
@@ -82,7 +117,7 @@ const TransactionItem = (props: TransactionItemProps) => {
     const navigation: NavigationProp<any> = useNavigation();
     return (
         <>
-            <TouchableOpacity onPress={() => navigation.navigate('Detail', { item: props })} style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => navigation.navigate('Detail', props)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ color: '#fff', fontSize: 24 }}>{props.bus_no}</Text>
                 </View>
@@ -94,21 +129,21 @@ const TransactionItem = (props: TransactionItemProps) => {
                         </View>
                         <Text style={{fontWeight: 'bold', color: '#767680', fontSize: 12}}>{props.timestamp}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 3 }}>
-                        <View>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{props.timestart}</Text>
-                            <Text style={{ fontSize: 12, color: '#767680'}}>{props.departure}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 20 }}>
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{props.timestart}</Text>
+                            <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{props.departure}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
                             <View style={{ width: 32, height: 32, borderRadius: 25, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginHorizontal: 5 }}>
-                                <Ionicons name="bus" size={15} color="#fff" />
+                            <Ionicons name="bus" size={15} color="#fff" />
                             </View>
                             <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
                         </View>
-                        <View>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'right'}}>{props.timeend}</Text>
-                            <Text style={{ fontSize: 12, color: '#767680'}}>{props.arrival}</Text>
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{props.timeend}</Text>
+                            <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{props.arrival}</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 3 }}>
@@ -146,27 +181,27 @@ const HistoryScreen = () => {
                     color="#001356"
                     titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
             </Appbar.Header>
-            <ScrollView onScroll={handleScroll}>
-                <View style={{ margin: 15 }}>
-                    <View style={{ backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
-                        {Data.length !== 0 ? Data.map((key, index) => 
-                            <React.Fragment key={index}>
-                                <TransactionItem
-                                    bus_no={key.bus_no}
-                                    timestamp={key.timestamp}
-                                    timestart={key.timestart}
-                                    departure={key.departure}
-                                    timeend={key.timeend}
-                                    arrival={key.arrival}
-                                    class={key.class}
-                                    price={key.price}/>
-                                {index !== Data.length - 1 && 
-                                <View style={{ width: 250, height: 0.5, backgroundColor: '#767680', marginVertical: 15 }}></View>}
-                            </React.Fragment>
-                        ) :
-                        <Text style={{fontFamily:'RobotoRegular' ,fontSize: 16}}>There is no transaction</Text>
-                        }
-                    </View>
+            <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+                <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
+                    {Data.length !== 0 ? Data.map((key, index) => 
+                        <React.Fragment key={index}>
+                            <TransactionItem
+                                bus_no={key.bus_no}
+                                timestamp={key.timestamp}
+                                timestart={key.timestart}
+                                departure={key.departure}
+                                timeend={key.timeend}
+                                arrival={key.arrival}
+                                class={key.class}
+                                price={key.price}
+                                code={key.code}
+                                payment-method={key['payment-medthod']}/>
+                            {index !== Data.length - 1 && 
+                            <View style={{ width: 250, height: 0.5, backgroundColor: '#767680', marginVertical: 15 }}></View>}
+                        </React.Fragment>
+                    ) :
+                    <Text style={{fontFamily:'RobotoRegular' ,fontSize: 16}}>There is no transaction</Text>
+                    }
                 </View>
             </ScrollView>
         </>

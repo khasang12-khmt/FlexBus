@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-native-community/geolocation": "^3.0.6",
     "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -21,6 +22,7 @@
     "@react-navigation/stack": "^6.3.16",
     "axios": "^1.4.0",
     "expo": "~48.0.15",
+    "expo-clipboard": "^4.1.2",
     "expo-location": "^15.1.1",
     "expo-status-bar": "~1.4.4",
     "lodash": "^4.17.21",
@@ -37,6 +39,7 @@
     "react-native-onboarding-swiper": "^1.2.0",
     "react-native-paper-dropdown": "^1.0.7",
     "react-native-reanimated": "^2.14.4",
+    "react-native-svg": "^13.9.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10",
     "tailwindcss": "^3.3.2"
