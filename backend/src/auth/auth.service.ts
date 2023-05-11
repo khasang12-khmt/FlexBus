@@ -29,6 +29,7 @@ export class AuthService {
           firstName: user.firstName,
           lastName: user.lastName,
           accessToken: this.jwtService.sign(user),
+          phoneNumber: user.phoneNumber,
         },
       };
     }
