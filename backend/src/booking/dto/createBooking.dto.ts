@@ -6,8 +6,10 @@ export class CreateBookingDto {
 
   @IsNotEmpty()
   busInfo: any;
+
   @IsNotEmpty()
   payment: {
+    method: string;
     cardNumber: string;
     cardHolder: string;
     ccv: number;
