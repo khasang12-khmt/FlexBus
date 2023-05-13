@@ -13,15 +13,24 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput, Button } from "react-native-paper";
 import CustomImage from "../../components/CustomImage";
+import CustomAuthInput from "../../components/CustomAuthInput";
+import CustomButton from "../../components/CustomButton";
+import axios from "axios";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const windowWidth = 0.85 * useWindowDimensions().width;
 
   const navigation = useNavigation<any>();
   const imageSource: ImageSourcePropType = require("../../assets/Login.png");
-
+  const handleLogin = async () => {
+    const { data } = await axios.post("http://10.0.2.2:9008/auth/login", {
+      email,
+      password,
+    });
+    // console.log()
+  };
   return (
     <KeyboardAvoidingView
       className="flex self-center"
@@ -33,61 +42,40 @@ const LoginScreen = () => {
     >
       <CustomImage source={imageSource} />
       <View className="flex flex-row flex-wrap" style={{ width: windowWidth }}>
-        <TextInput
-          // label={"Email"}
-          className="basis-full"
-          placeholder="Email address/Phone number"
+        <CustomAuthInput
           value={email}
           onChangeText={setEmail}
-          style={{
-            backgroundColor: "#FFFFFF",
-            borderColor: "#000000",
-            borderRadius: 15,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            marginVertical: 5,
-          }}
-          underlineColor="transparent"
-          // activeUnderlineColor="transparent"
+          placeholder="Email address/Phone number"
+          isSecure={false}
         />
-        <TextInput
-          // label={"Password"}
-          className="basis-full"
-          placeholder="Password"
+        <CustomAuthInput
           value={password}
-          secureTextEntry={true}
           onChangeText={setPassword}
-          style={{
-            backgroundColor: "#FFFFFF",
-            borderColor: "#000000",
-            borderRadius: 15,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            marginVertical: 5,
-          }}
-          underlineColor="transparent"
+          placeholder="Password"
+          isSecure={true}
         />
       </View>
       <TouchableOpacity className="flex-row-reverse">
-        <Text>Forgot password ?</Text>
+        <Text className="text-[#4658A9] font-bold">Forgot password ?</Text>
       </TouchableOpacity>
-      <Button className="" mode="contained" onPress={() => {}}>
+      {/* <Button className="" mode="contained" onPress={handleLogin}>
         Login
-      </Button>
+      </Button> */}
+      <CustomButton text="Login" onPress={handleLogin} />
       <View className="flex-row  items-center ">
-        <View className="flex-1 h-0.5 bg-black self-center" />
+        <View className="flex-1 h-0.5 bg-[#757171] self-center" />
         <Text
-          style={{ alignSelf: "center", paddingHorizontal: 5, fontSize: 15 }}
+          className="self-center px-2 text-xs text-[#757171]"
         >
           Or sign in with
         </Text>
-        <View className="flex-1 h-0.5 bg-black self-center" />
+        <View className="flex-1 h-0.5 bg-[#757171] self-center" />
       </View>
-      <TouchableOpacity className="flex justify-center items-center">
+      <TouchableOpacity className="flex justify-center items-center my-3">
         <Image source={require("../../assets/Google.png")} />
       </TouchableOpacity>
       <View className="flex-row justify-center">
-        <Text>Not register yet ? </Text>
+        <Text className="text-[#636363]">Not register yet ? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text>Create Account</Text>
         </TouchableOpacity>
