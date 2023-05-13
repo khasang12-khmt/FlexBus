@@ -26,6 +26,11 @@ const AppNav = () => {
       {/* <AppStack/> */}
       <Stack.Navigator>
         <Stack.Screen
+          name="AuthStack"
+          component={AuthStack}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
           options={{ headerShown: false }}

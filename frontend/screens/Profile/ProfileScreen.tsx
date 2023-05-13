@@ -40,7 +40,7 @@ const ProfileScreen = () => {
         />
       </View>
       <Text className="mx-auto" variant="headlineLarge">
-        FlexBus User
+        {username}
       </Text>
 
       <View className="mx-3">

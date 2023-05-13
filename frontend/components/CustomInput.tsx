@@ -1,13 +1,16 @@
-import { View, Text } from 'react-native'
+import { View, Text } from "react-native";
 import { TextInput, IconButton } from "react-native-paper";
-import React,{useState} from 'react'
+import React, { useState } from "react";
 
 type CustomInputProps = {
   searchText: string | undefined;
   setSearchText: (arg0: string) => void;
-}
+};
 
-const CustomInput: React.FC<CustomInputProps> = ({searchText, setSearchText}) => {
+const CustomInput: React.FC<CustomInputProps> = ({
+  searchText,
+  setSearchText,
+}) => {
   return (
     <TextInput
       label="Search"
@@ -23,6 +26,6 @@ const CustomInput: React.FC<CustomInputProps> = ({searchText, setSearchText}) =>
       }
     />
   );
-}
+};
 
-export default CustomInput
+export default CustomInput;
