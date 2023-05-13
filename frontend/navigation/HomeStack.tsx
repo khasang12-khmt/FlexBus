@@ -3,6 +3,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/Home/HomeScreen";
 import RouteScreen from "../screens/Home/RouteScreen";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 type LocationName = {
   location_name: string | undefined;

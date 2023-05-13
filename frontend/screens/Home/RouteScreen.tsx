@@ -4,6 +4,11 @@ import { GOOGLE_API_KEY } from '../../config/config';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import RouteResultItem from '../../components/Map/RouteResultItem';
+import CustomLoader from "../../components/CustomLoader";
+import { Title, Subheading } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import {routeData} from "../../data"
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 type LocationName = {
   location_name: string | undefined;
@@ -42,6 +47,8 @@ type Route = {
 
 const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
   const { fromLocation, toLocation } = route.params;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  
   const [routes,setRoutes] = useState<Route[]>([]);
 
   const fetchLocationByAddress = (typ:string, address:string|undefined) => {
@@ -69,14 +76,18 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
 
   const fetchRoute = () => {
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${fromLocation.latitude},${fromLocation.longitude}&destination=${toLocation.latitude},${toLocation.longitude}&mode=transit&transit_mode=bus&key=${GOOGLE_API_KEY}&alternatives=true`;
+    console.log(url);
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         let routeSaves: Route[] = [];
         
         // Extract the relevant information from the response
-        const routes = data.routes;
-        routes.forEach((route:any, index:number)=>{
+        let routes = data.routes;
+        // Use Fake data instead of real data if limit exceeded
+        if(data.status== "OVER_QUERY_LIMIT") routes = routeData.routes;
+        
+        routes.forEach((route:any)=>{
           let routeSave: Route = {
             price: "0",
             departure: "0",
@@ -90,7 +101,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           const legs = route?.legs;
 
           legs?.flatMap((leg: any) => {
-            routeSave.price = route.fare.value;
+            routeSave.price = route.fare?.value;
             routeSave.departure = leg.start_address;
             routeSave.arrival = leg.end_address;
             routeSave.timestart = leg.departure_time?.text;
@@ -104,7 +115,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
                 step.transit_details.line.vehicle.type === "BUS"
             );
 
-            if (!busSteps || busSteps.length == 0) console.log("No bus routes found");
+            if (!busSteps || busSteps.length == 0) alert("No bus routes found");
             else {
               let busStep: BusStep = {
                 bus_no: "0",
@@ -126,15 +137,19 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
                 routeSave.busSteps.push(JSON.parse(JSON.stringify(busStep)));
               });
             }
-            routeSaves.push(routeSave);
+            if (routeSave.price) routeSaves.push(routeSave);
           });
         })
         setRoutes(routeSaves);
+        
+        setIsLoading((load)=>false);
       })
       .catch((error) => console.error(error));
   }
+  
 
   useEffect(()=>{
+    setIsLoading(true);
     if (
       fromLocation.location_name != "Current Location" &&
       fromLocation.location_name != "To Location"
@@ -147,16 +162,35 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
       fetchLocationByAddress("to", toLocation.location_name);
     fetchRoute();
   },[])
+
   return (
     <View className="flex flex-1 flex-col">
       <CustomNavigationHeader name="Search Result" navigateBackEnable={true} />
-      <ScrollView>
-        {routes &&
-          routes.length > 0 &&
-          routes.map((route: Route, index) => (
-            <RouteResultItem key={index} route={route} />
-          ))}
-      </ScrollView>
+      {isLoading ? (
+        <CustomLoader />
+      ) : (
+        <ScrollView className="flex flex-1">
+          {routes.length == 0 && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "auto"
+              }}
+            >
+              <Icon name="error-outline" size={50} color="#888" />
+              <Title>Oops!</Title>
+              <Subheading>No bus routes found.</Subheading>
+            </View>
+          )}
+          {routes &&
+            routes.length > 0 &&
+            routes.map((route: Route, index) => (
+              <RouteResultItem key={index} route={route} />
+            ))}
+        </ScrollView>
+      )}
     </View>
   );
 };

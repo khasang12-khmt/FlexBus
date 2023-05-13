@@ -33,7 +33,7 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
       return accumulator + parseFloat(currentValue.distance.split(" ")[0]);
     }, 0);
     if(total<sum) return "0 km";
-    let res = (total - sum).toFixed(2);
+    let res = (total - sum).toFixed(1);
     return res.toString() + " km"; 
   }
   return (
@@ -94,7 +94,7 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
                 style={{
                   fontFamily: "RobotoRegular",
                   fontSize: 12,
-                  color: "#555555",
+                  color: "#555555"
                 }}
               >
                 {busStep.arrival}
@@ -106,6 +106,21 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
 
       {/* Distance & Time & Price */}
       <View className="flex flex-col gap-y-1">
+        <View className="flex flex-row justify-between mx-2">
+          <View className="flex flex-row gap-x-2">
+            <MaterialCommunityIcons name="clock-outline" size={20} />
+            <Text
+              style={{
+                fontFamily: "RobotoRegular",
+                fontSize: 12,
+                color: "#555555",
+              }}
+            >
+              Duration (Walking Included)
+            </Text>
+          </View>
+          <Text>{route.duration}</Text>
+        </View>
         <View className="flex flex-row justify-between mx-2">
           <View className="flex flex-row gap-x-2">
             <MaterialCommunityIcons name="map-marker-distance" size={20} />
@@ -135,21 +150,6 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
             </Text>
           </View>
           <Text>{calcWalkingTime()}</Text>
-        </View>
-        <View className="flex flex-row justify-between mx-2">
-          <View className="flex flex-row gap-x-2">
-            <MaterialCommunityIcons name="clock-outline" size={20} />
-            <Text
-              style={{
-                fontFamily: "RobotoRegular",
-                fontSize: 12,
-                color: "#555555",
-              }}
-            >
-              Total Duration
-            </Text>
-          </View>
-          <Text>{route.duration}</Text>
         </View>
         <View className="flex flex-row justify-between mx-2">
           <View className="flex flex-row gap-x-2">
