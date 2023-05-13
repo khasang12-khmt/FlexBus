@@ -31,6 +31,8 @@ export class AuthService {
           createdAt: user.createdAt,
           email: user.email,
           name: user.name,
+          gender: user.gender,
+          birthDay: user.birthDay,
           accessToken: this.jwtService.sign(user),
           phoneNumber: user.phoneNumber,
           active: user.active,
@@ -45,10 +47,10 @@ export class AuthService {
   }
 
   async register(userDto: RegisterDto): Promise<ResponseStatus<UserRegister>> {
-    // const user = await this.userModel.findOne({ email: userDto.email });
-    // if (user) {
-    //   throw new HttpException('User already exist', HttpStatus.BAD_REQUEST);
-    // }
+    const user = await this.userModel.findOne({ email: userDto.email });
+    if (user) {
+      throw new HttpException('User already exist', HttpStatus.BAD_REQUEST);
+    }
 
     const otp = phoneNumberToken(6, { type: 'string' });
 

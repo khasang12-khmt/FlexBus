@@ -21,8 +21,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Bus API')
+    .setDescription('API for managing bus schedules and bookings')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -35,4 +35,5 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT);
 }
+
 bootstrap();
