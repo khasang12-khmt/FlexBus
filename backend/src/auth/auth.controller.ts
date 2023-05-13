@@ -9,6 +9,13 @@ import { UserLogin, UserRegister } from './types';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('otp')
+  async otpVerify(
+    @Body() dto: { email: string; otp: string },
+  ): Promise<ResponseStatus<null>> {
+    return await this.authService.otpVerify(dto);
+  }
+
   @Post('login')
   async login(@Body() userDto: LoginDto): Promise<ResponseStatus<UserLogin>> {
     return await this.authService.login(userDto);

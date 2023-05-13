@@ -16,20 +16,4 @@ export class RegisterDto {
   @IsNotEmpty()
   @IsString()
   password: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
-  @IsNotEmpty()
-  @IsString()
-  firstName: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
-  @IsNotEmpty()
-  @IsString()
-  lastName: string;
 }

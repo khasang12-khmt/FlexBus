@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Booking, BookingDocument } from 'entities/booking.entity';
 import { Model } from 'mongoose';
 import { CreateBookingDto } from './dto';
-import { ResponseStatus, SUCCESS_EXCEPTION } from 'types';
+import { ERROR_EXCEPTION, ResponseStatus, SUCCESS_EXCEPTION } from 'types';
 @Injectable()
 export class BookingService {
   constructor(
@@ -22,7 +22,7 @@ export class BookingService {
     } catch (err) {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: SUCCESS_EXCEPTION.INTERNAL_SERVER_ERROR,
+        message: ERROR_EXCEPTION.INTERNAL_SERVER_ERROR,
       };
     }
   }
@@ -40,7 +40,7 @@ export class BookingService {
     } catch (err) {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: SUCCESS_EXCEPTION.INTERNAL_SERVER_ERROR,
+        message: ERROR_EXCEPTION.INTERNAL_SERVER_ERROR,
       };
     }
   }
@@ -56,7 +56,7 @@ export class BookingService {
     } catch (err) {
       return {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: SUCCESS_EXCEPTION.INTERNAL_SERVER_ERROR,
+        message: ERROR_EXCEPTION.INTERNAL_SERVER_ERROR,
       };
     }
   }
