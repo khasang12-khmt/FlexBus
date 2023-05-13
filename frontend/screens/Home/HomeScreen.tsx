@@ -12,15 +12,7 @@ import FindRouteModal from '../../components/Map/FindRouteModal';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomLoader from '../../components/CustomLoader';
-
-type LocationName = {
-  location_name: string | undefined;
-};
-type Coord = {
-  latitude: number;
-  longitude: number;
-};
-type CoordName = LocationName & Coord;
+import { Coord, CoordName } from '../../types/LocationTypes';
 
 const HomeScreen = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);

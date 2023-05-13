@@ -1666,6 +1666,75 @@ export const routeData = {
             },
             {
               distance: {
+                text: "29.6 km",
+                value: 29622,
+              },
+              duration: {
+                text: "1 hour 32 mins",
+                value: 5517,
+              },
+              end_location: {
+                lat: 10.8735531,
+                lng: 106.8094979,
+              },
+              html_instructions: "Bus towards Đại Học Giao thông vận tải",
+              polyline: {
+                points:
+                  "a{r`A_{~iS@PQ@kBN?RiAJ{BTaDp@s@RK@aAACQSkBq@eGo@oFOaAWqB[uCGk@OoAMiAK_AEc@CKQyAOiAEe@WkBMw@YoCE_@CKASCOAOY_C]qDGq@AQCS[sCa@qDOsAIk@Gk@E_@CMUkBc@gD?W@??A@??A@??A@??A?A@??A?A?A?A?A?AAA?AAA?AA??AA?A??AA?A?AAA?A?A@A?Qy@YgAeAaEo@sBEMK]Og@K]{@iCEOc@yAOi@Us@EOI]Oi@Mc@c@yAAGa@uAgBwFi@eB_@sAW{@q@_CCMv@SbA[XIPEn@QPEXI`@Kp@QGQEMi@oBM_@CCGMEGACIIEEUSSQo@[kCiA]OA?i@W_By@QIuAu@Um@Og@g@iBI_@Oe@Ww@?A]cAQm@I[o@wBi@iBOe@e@mAEI@A@??A@??A?A@??A?A?A?A?A?A?AA??A?AA??AA??AA?A?A??AA?IUa@uAEQs@cC[mA@EHM_@_@u@k@KG?AgA{@a@[]W_@]c@e@c@a@y@q@sAkAQO[Wc@_@KIYWOMKKMM][c@]SOqCyBMMSQ[[{@y@g@c@c@c@SQMSeBsFK[?MASEYAE?CAE?E?K@yC@m@?GBkA?]@SAIAI@g@B_A@_A@a@@aABqC@o@DyBDcBR?DAr@QrDyAJCUeBC_@AKCKCMCEGIOIWIc@Me@KKAWGWCQ?QBSFI?iAEe@Co@Cg@A_@?WAwCO_@C]Ai@AeBGA?CAa@AC?eACyAEWAo@CM?[A_@C{@AQ?QCm@GWEmBUMAo@K[GyAUw@MWEmAUQEe@KaAS}@Qe@IYE]GUEc@I]IOCIAOCEAEAIAE?G?EBA?EDKLMPML_@d@u@v@EF{AfB[`@UJEBE@G@C?GAOOGEaAw@u@o@SOUSs@k@a@[_Aw@CCe@]GGOOCEIGKI[U]UAAA?UMEAGEWI_@MCGACACGCKEGAWImA_@gDcA_AYc@M_@Mg@Oa@Mc@MUIYMMGWQSOYYEEEEQSWe@CEUi@CIIYWoAOY?CH]VwED]@MP}A?CF_@@EDo@Fm@H[FYFYJq@?Q?[Ae@Eq@Io@EWI[Mi@IWGO?A@??A?A?A?A?A?A?A?AA??A?AA??AAAAAAAA?AAA?A?A?A?A?A?a@aAKWEIQe@Wi@]a@?AYU[UIEQK_@QWKYGICg@GYASA[JW?UAu@?y@?sB?W?g@?Y?A@iE?{A?aAIu@Qs@Yu@i@y@_AsAkBgA{AkBmCw@gAG{@C{AI}BYkDo@_GuBaSoCgWaBgNAGMgAGg@_@aE]oCCMM{ASwAKaAU}B[wCCWc@uDSaBgAcKAGIgAEc@CUKeAEc@CQC]OgAAc@CmB?ENcC?SAKAMCYCSGk@Ke@CKy@oBUu@Y{A[yB]}Be@sBk@mBy@aC{@gB}@iBqAuBqAaBoA}AeBaBsAeA{AeAeBgAmBaAiAe@gA_@}Bu@}Bi@qB_@gC]uEm@oEg@_Gk@sD_@_Gm@oFw@iGu@?@OAkAO_AKu@KsAQi@Ia@Gg@Ia@G_@IuAUWEaBc@a@MMAI?K@QIA?qAa@_@MgC_Ac@WwAo@GCAAaBy@q@[m@Y?@wHgDoHkD}DkBc@QuKeFkEoBqIiEaBq@k@jAUb@oDcBc@S}Au@YMo@YwAq@U?K?WBK@g@NC@SHUHw@V]LI@eAb@ODgAd@A@k@XONMRORCB[j@gAhBAB[h@SXQZGJKNGJMRU\\QZQTKHKLSNA@o@\\GBaAh@UJ[NYLu@\\MHQHe@VKDUL{@l@q@`@OJOHc@Vc@TGDYHOBUDYDk@DC@QDSDSDq@TYNm@^]Vk@d@CBMNEDWTe@Z[VQLEBOJYRCB]REFCBKHMLYX]^GBCBEDe@b@WTULSFQBS@]DaADi@HyAPWDCS@M?OBk@Bi@BwABc@B_A?A@a@@c@?M@w@BuA@U@u@@i@COCMEKEKS[KSQ_@CKCM@_@@q@Bi@HmBBo@Bs@De@JiB@YF]HqB@[AAA_@H{A@IDa@@M@I@GFMTWRMTQTSHMFMDKFUBKDg@?A?q@?S?m@BiA?I@iAC{A@eADsCA{A?MD}@@a@?MFC@C@C?CFwCBeAD[BEFMJMBCPWLKJOX]JIJGHE^g@^g@\\a@b@o@@CRY@C?ABQDE`@s@PYNUj@mA\\s@Zg@dAaCP]b@}@HO`@{@JSRa@p@mAVa@Tg@J[JUN]Pc@Tg@DSLOd@cARYf@s@R]@AVg@Pc@Ni@Rw@BEFSRs@Fi@BO?C@UCYGq@C_@ACAMMiBGq@AUCW?CAICOGo@?IKq@GYIc@@IO[MUKS[g@SYKSIQK]M[FOC_ACi@@UBUFUJ_@BEf@sAd@oAPu@No@Ho@D_@?c@AWAMW}BOqAG_@My@EYa@yCe@yCIg@My@Kk@Mm@Mq@EYAIOcAEQYiBOaASiAk@qDGa@SqAUoA?CAAc@mCEWc@{CI_@CUIc@[kBSaBs@sEGc@Ii@G]m@aDg@yDk@yDKk@iAwHa@{CG]SmASgA]}BE[Iq@Ig@?EGc@COq@sEQeACUEUWeBCGWoAUmAQaAKGEQ{@?g@@q@?K?c@?m@?i@?sA?]Am@?Q?O?c@@U?Y?C?E?mBBO?s@@U?Q?O?C?e@@a@AG?]?]@K?[?S?m@@{@?eEBa@?gB@W?eBBq@@eA?w@?w@@o@@IAO@s@@]@G?K?uA?g@@M?S?oA@M?[?[?[?a@?I?iA@S?u@AS?qAEw@CW?g@ASA]A{BCo@Ca@Ci@?[AeBEaBEm@Co@AG?i@CsAEu@Ey@EI?}Hg@WBOJKPYlAa@xAq@xCY`BQjA[vB[rA[vBC?Ir@UhBAJIPCFMNMPIFGDODI@{@LQG?G?AACAAEEEEa@U[U]U]S[U]Ss@e@FK",
+              },
+              start_location: {
+                lat: 10.751368,
+                lng: 106.659203,
+              },
+              transit_details: {
+                arrival_stop: {
+                  location: {
+                    lat: 10.8735531,
+                    lng: 106.8094979,
+                  },
+                  name: "Nghĩa Trang Liệt Sĩ Thành Phố Hcm Quốc Lộ 1",
+                },
+                arrival_time: {
+                  text: "10:22 PM",
+                  time_zone: "Asia/Saigon",
+                  value: 1683991378,
+                },
+                departure_stop: {
+                  location: {
+                    lat: 10.751368,
+                    lng: 106.659203,
+                  },
+                  name: "14 - 16 Châu Văn Liêm",
+                },
+                departure_time: {
+                  text: "8:51 PM",
+                  time_zone: "Asia/Saigon",
+                  value: 1683985861,
+                },
+                headsign: "Đại Học Giao thông vận tải",
+                headway: 800,
+                line: {
+                  agencies: [
+                    {
+                      name: "Hợp tác xã vận tải xe buýt Quyết Thắng",
+                      phone: "011 84 28 3864 2712",
+                      url: "http://www.danhba24h.com/d/1638/51287/htx-quyet-thang-van-tai-xe-buyt.html",
+                    },
+                  ],
+                  name: "Bến Xe Chợ Lớn - Đại Học Giao Thông Vận Tải",
+                  short_name: "56",
+                  vehicle: {
+                    icon: "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png",
+                    name: "Bus",
+                    type: "BUS",
+                  },
+                },
+                num_stops: 64,
+              },
+              travel_mode: "TRANSIT",
+            },
+            {
+              distance: {
                 text: "0.6 km",
                 value: 648,
               },

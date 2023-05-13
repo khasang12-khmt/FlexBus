@@ -1,7 +1,9 @@
 import { View, Text, Image } from 'react-native'
 import {Button, Divider} from 'react-native-paper'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 import React from 'react'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type BusStep = {
   bus_no: string;
@@ -24,9 +26,18 @@ type Route = {
 };
 
 type RouteResultItemProps = {
-  route: Route
+  route: Route;
 }
+type RootStackParamList = {
+  BusDetail: Route;
+};
+
+type BusDetailScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "BusDetail"
+>;
 const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
+  const navigation = useNavigation<BusDetailScreenNavigationProp>();
   const calcWalkingTime = () => {
     const total = parseFloat(route.distance.split(" ")[0]);
     const sum = route.busSteps.reduce((accumulator, currentValue) => {
@@ -94,7 +105,7 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
                 style={{
                   fontFamily: "RobotoRegular",
                   fontSize: 12,
-                  color: "#555555"
+                  color: "#555555",
                 }}
               >
                 {busStep.arrival}
@@ -184,7 +195,12 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
       </View>
 
       {/* Button */}
-      <Button className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-20 mb-6">
+      <Button
+        className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-20 mb-6"
+        onPress={() =>
+          navigation.navigate("BusDetail", route)
+        }
+      >
         <Text
           className="text-white"
           style={{ fontFamily: "RobotoMedium", fontSize: 15 }}

@@ -12,8 +12,6 @@ import _ from "lodash";
 import { Picker } from "@react-native-picker/picker";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import { GOOGLE_API_KEY } from '../../config/config';
 
 type FindRouteModalProps = {
   visible: boolean;
