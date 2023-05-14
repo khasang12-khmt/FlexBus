@@ -9,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import Onboarding from "react-native-onboarding-swiper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { IconButton, Button } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 
 const OnboardingScreen = () => {
   const navigation = useNavigation<any>();
@@ -53,6 +55,14 @@ const OnboardingScreen = () => {
       ></IconButton>
     </View>
   );
+
+  useEffect(() => {
+    const setFirstTimeLoad = async () => {
+      await AsyncStorage.setItem("isFirstTimeOpen", "false");
+    };
+
+    setFirstTimeLoad();
+  }, []);
 
   return (
     <Onboarding
