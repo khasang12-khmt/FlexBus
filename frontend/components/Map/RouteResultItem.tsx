@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import {Button, Divider} from 'react-native-paper'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -195,19 +195,17 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
       </View>
 
       {/* Button */}
-      <Button
-        className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-20 mb-6"
-        onPress={() =>
-          navigation.navigate("BusDetail", route)
-        }
-      >
-        <Text
-          className="text-white"
-          style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
-        >
-          Check
-        </Text>
-      </Button>
+      <TouchableOpacity onPress={() => navigation.navigate("BusDetail", route)}>
+        <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 mb-6 rounded-md">
+          <Text
+            className="text-white"
+            style={{ fontFamily: "RobotoMedium", fontSize: 18 }}
+          >
+            Check
+          </Text>
+        </Button>
+      </TouchableOpacity>
+
       <Divider />
     </View>
   );
