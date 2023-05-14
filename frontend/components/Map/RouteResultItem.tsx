@@ -1,7 +1,9 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import {Button, Divider} from 'react-native-paper'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 import React from 'react'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type BusStep = {
   bus_no: string;
@@ -24,16 +26,25 @@ type Route = {
 };
 
 type RouteResultItemProps = {
-  route: Route
+  route: Route;
 }
+type RootStackParamList = {
+  BusDetail: Route;
+};
+
+type BusDetailScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "BusDetail"
+>;
 const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
+  const navigation = useNavigation<BusDetailScreenNavigationProp>();
   const calcWalkingTime = () => {
     const total = parseFloat(route.distance.split(" ")[0]);
     const sum = route.busSteps.reduce((accumulator, currentValue) => {
       return accumulator + parseFloat(currentValue.distance.split(" ")[0]);
     }, 0);
     if(total<sum) return "0 km";
-    let res = (total - sum).toFixed(2);
+    let res = (total - sum).toFixed(1);
     return res.toString() + " km"; 
   }
   return (
@@ -108,6 +119,21 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
       <View className="flex flex-col gap-y-1">
         <View className="flex flex-row justify-between mx-2">
           <View className="flex flex-row gap-x-2">
+            <MaterialCommunityIcons name="clock-outline" size={20} />
+            <Text
+              style={{
+                fontFamily: "RobotoRegular",
+                fontSize: 12,
+                color: "#555555",
+              }}
+            >
+              Duration (Walking Included)
+            </Text>
+          </View>
+          <Text>{route.duration}</Text>
+        </View>
+        <View className="flex flex-row justify-between mx-2">
+          <View className="flex flex-row gap-x-2">
             <MaterialCommunityIcons name="map-marker-distance" size={20} />
             <Text
               style={{
@@ -135,21 +161,6 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
             </Text>
           </View>
           <Text>{calcWalkingTime()}</Text>
-        </View>
-        <View className="flex flex-row justify-between mx-2">
-          <View className="flex flex-row gap-x-2">
-            <MaterialCommunityIcons name="clock-outline" size={20} />
-            <Text
-              style={{
-                fontFamily: "RobotoRegular",
-                fontSize: 12,
-                color: "#555555",
-              }}
-            >
-              Total Duration
-            </Text>
-          </View>
-          <Text>{route.duration}</Text>
         </View>
         <View className="flex flex-row justify-between mx-2">
           <View className="flex flex-row gap-x-2">
@@ -184,14 +195,17 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route}) => {
       </View>
 
       {/* Button */}
-      <Button className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-20 mb-6">
-        <Text
-          className="text-white"
-          style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
-        >
-          Check
-        </Text>
-      </Button>
+      <TouchableOpacity onPress={() => navigation.navigate("BusDetail", route)}>
+        <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 mb-6 rounded-md">
+          <Text
+            className="text-white"
+            style={{ fontFamily: "RobotoMedium", fontSize: 18 }}
+          >
+            Check
+          </Text>
+        </Button>
+      </TouchableOpacity>
+
       <Divider />
     </View>
   );

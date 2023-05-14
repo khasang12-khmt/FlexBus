@@ -3,6 +3,8 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/Home/HomeScreen";
 import RouteScreen from "../screens/Home/RouteScreen";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import BusDetailScreen from "../screens/Bus/BusDetailScreen";
 
 type LocationName = {
   location_name: string | undefined;
@@ -15,7 +17,8 @@ type CoordName = LocationName & Coord;
 
 type HomeStackParamList = {
   Home: undefined;
-  Route: { fromLocation: CoordName, toLocation: CoordName };
+  Route: { fromLocation: CoordName; toLocation: CoordName };
+  BusDetail: undefined;
 };
 
 const Stack = createNativeStackNavigator <HomeStackParamList>();
@@ -25,10 +28,8 @@ const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen
-        name="Route"
-        component={RouteScreen}
-      />
+      <Stack.Screen name="Route" component={RouteScreen} />
+      <Stack.Screen name="BusDetail" component={BusDetailScreen} />
     </Stack.Navigator>
   );
 };

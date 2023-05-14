@@ -4,15 +4,12 @@ import { GOOGLE_API_KEY } from '../../config/config';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import RouteResultItem from '../../components/Map/RouteResultItem';
-
-type LocationName = {
-  location_name: string | undefined;
-};
-type Coord = {
-  latitude: number;
-  longitude: number;
-};
-type CoordName = LocationName & Coord;
+import CustomLoader from "../../components/CustomLoader";
+import { Title, Subheading } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import {routeData} from "../../data"
+import { Coord, CoordName } from "../../types/LocationTypes";
+import { BusStep, Route } from "../../types/RouteTypes";
 
 type RootStackParamList = {
   Route: { fromLocation: CoordName; toLocation: CoordName };
@@ -20,28 +17,10 @@ type RootStackParamList = {
 
 type RouteScreenProps = NativeStackScreenProps<RootStackParamList, "Route">;
 
-type BusStep = {
-  bus_no: string;
-  departure: string;
-  arrival: string;
-  timestart: string;
-  timeend: string;
-  duration: string;
-  distance: string;
-};
-type Route = {
-  price: string;
-  departure: string;
-  arrival: string;
-  timestart: string;
-  timeend: string;
-  duration: string;
-  distance: string;
-  busSteps: BusStep[];
-};
-
 const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
   const { fromLocation, toLocation } = route.params;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  
   const [routes,setRoutes] = useState<Route[]>([]);
 
   const fetchLocationByAddress = (typ:string, address:string|undefined) => {
@@ -69,72 +48,95 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
 
   const fetchRoute = () => {
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${fromLocation.latitude},${fromLocation.longitude}&destination=${toLocation.latitude},${toLocation.longitude}&mode=transit&transit_mode=bus&key=${GOOGLE_API_KEY}&alternatives=true`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        let routeSaves: Route[] = [];
-        
-        // Extract the relevant information from the response
-        const routes = data.routes;
-        routes.forEach((route:any, index:number)=>{
-          let routeSave: Route = {
-            price: "0",
+    console.log(url);
+    // Testing
+    const test = true;
+
+    if(test){
+      const routes = routeData.routes;
+      parseRoute(routes);
+      setIsLoading((load) => false);
+    }
+    else{
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          // Extract the relevant information from the response
+          let routes = data.routes;
+          // Use Fake data instead of real data if limit exceeded
+          if (data.status == "OVER_QUERY_LIMIT") routes = routeData.routes;
+
+          parseRoute(routes);
+
+          setIsLoading((load) => false);
+        })
+        .catch((error) => console.error(error));
+    }
+    
+  }
+
+  const parseRoute = (routes: any) => {
+    let routeSaves: Route[] = [];
+    routes.forEach((route: any) => {
+      let routeSave: Route = {
+        price: "0",
+        departure: "0",
+        arrival: "0",
+        timestart: "0",
+        timeend: "0",
+        duration: "0",
+        distance: "0",
+        busSteps: [],
+      };
+      const legs = route?.legs;
+
+      legs?.flatMap((leg: any) => {
+        routeSave.price = route.fare?.value;
+        routeSave.departure = leg.start_address;
+        routeSave.arrival = leg.end_address;
+        routeSave.timestart = leg.departure_time?.text;
+        routeSave.timeend = leg.arrival_time?.text;
+        routeSave.duration = leg.duration?.text;
+        routeSave.distance = leg.distance?.text;
+
+        const busSteps = leg.steps.filter(
+          (step: any) =>
+            step.travel_mode === "TRANSIT" &&
+            step.transit_details.line.vehicle.type === "BUS"
+        );
+
+        if (!busSteps || busSteps.length == 0)
+          console.log("No bus routes found");
+        else {
+          let busStep: BusStep = {
+            bus_no: "0",
             departure: "0",
             arrival: "0",
             timestart: "0",
             timeend: "0",
-            duration: "0",
             distance: "0",
-            busSteps: [],
+            duration: "0",
           };
-          const legs = route?.legs;
-
-          legs?.flatMap((leg: any) => {
-            routeSave.price = route.fare.value;
-            routeSave.departure = leg.start_address;
-            routeSave.arrival = leg.end_address;
-            routeSave.timestart = leg.departure_time?.text;
-            routeSave.timeend = leg.arrival_time?.text;
-            routeSave.duration = leg.duration?.text;
-            routeSave.distance = leg.distance?.text;
-
-            const busSteps = leg.steps.filter(
-              (step: any) =>
-                step.travel_mode === "TRANSIT" &&
-                step.transit_details.line.vehicle.type === "BUS"
-            );
-
-            if (!busSteps || busSteps.length == 0) console.log("No bus routes found");
-            else {
-              let busStep: BusStep = {
-                bus_no: "0",
-                departure: "0",
-                arrival: "0",
-                timestart: "0",
-                timeend: "0",
-                distance: "0",
-                duration: "0"
-              };
-              busSteps.forEach((step: any) => {
-                busStep.bus_no = step.transit_details.line.short_name;
-                busStep.departure = step.transit_details.departure_stop.name;
-                busStep.arrival = step.transit_details.arrival_stop.name;
-                busStep.timestart = step.transit_details.departure_time.text;
-                busStep.timeend = step.transit_details.arrival_time.text;
-                busStep.distance = step.distance.text;
-                busStep.duration = step.duration.text;
-                routeSave.busSteps.push(JSON.parse(JSON.stringify(busStep)));
-              });
-            }
-            routeSaves.push(routeSave);
+          busSteps.forEach((step: any) => {
+            busStep.bus_no = step.transit_details.line.short_name;
+            busStep.departure = step.transit_details.departure_stop.name;
+            busStep.arrival = step.transit_details.arrival_stop.name;
+            busStep.timestart = step.transit_details.departure_time.text;
+            busStep.timeend = step.transit_details.arrival_time.text;
+            busStep.distance = step.distance.text;
+            busStep.duration = step.duration.text;
+            routeSave.busSteps.push(JSON.parse(JSON.stringify(busStep)));
           });
-        })
-        setRoutes(routeSaves);
-      })
-      .catch((error) => console.error(error));
+        }
+        if (routeSave.price) routeSaves.push(routeSave);
+      });
+    });
+    setRoutes(routeSaves);
   }
+  
 
   useEffect(()=>{
+    setIsLoading(true);
     if (
       fromLocation.location_name != "Current Location" &&
       fromLocation.location_name != "To Location"
@@ -147,16 +149,35 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
       fetchLocationByAddress("to", toLocation.location_name);
     fetchRoute();
   },[])
+
   return (
     <View className="flex flex-1 flex-col">
       <CustomNavigationHeader name="Search Result" navigateBackEnable={true} />
-      <ScrollView>
-        {routes &&
-          routes.length > 0 &&
-          routes.map((route: Route, index) => (
-            <RouteResultItem key={index} route={route} />
-          ))}
-      </ScrollView>
+      {isLoading ? (
+        <CustomLoader />
+      ) : (
+        <ScrollView className="flex flex-1">
+          {routes.length == 0 && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "auto"
+              }}
+            >
+              <Icon name="error-outline" size={50} color="#888" />
+              <Title>Oops!</Title>
+              <Subheading>No bus routes found.</Subheading>
+            </View>
+          )}
+          {routes &&
+            routes.length > 0 &&
+            routes.map((route: Route, index) => (
+              <RouteResultItem key={index} route={route} />
+            ))}
+        </ScrollView>
+      )}
     </View>
   );
 };

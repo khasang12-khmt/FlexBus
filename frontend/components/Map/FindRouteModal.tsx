@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {
   Modal,
@@ -12,8 +12,6 @@ import _ from "lodash";
 import { Picker } from "@react-native-picker/picker";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import { GOOGLE_API_KEY } from '../../config/config';
 
 type FindRouteModalProps = {
   visible: boolean;
@@ -115,7 +113,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
                 icon="crosshairs"
                 containerColor="white"
                 size={20}
-                onPress={() => getLocationData("from","Home")}
+                onPress={() => getLocationData("from", "Home")}
               />
             }
             theme={{ roundness: 20 }}
@@ -151,7 +149,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
                 icon="crosshairs"
                 containerColor="white"
                 size={20}
-                onPress={() => getLocationData("to","Home")}
+                onPress={() => getLocationData("to", "Home")}
               />
             }
             textColor="#001356"
@@ -192,18 +190,16 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
             </Picker>
           </View>
 
-          {/* Transits */}
-          <Button
-            className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10"
-            onPress={handleFind}
-          >
-            <Text
-              className="text-white"
-              style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
-            >
-              Find Route
-            </Text>
-          </Button>
+          <TouchableOpacity onPress={handleFind}>
+            <Button className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10">
+              <Text
+                className="text-white"
+                style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
+              >
+                Find Route
+              </Text>
+            </Button>
+          </TouchableOpacity>
         </Modal>
       </Portal>
 

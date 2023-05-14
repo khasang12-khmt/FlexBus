@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
 import MapView, { Marker, Polyline } from "react-native-maps";
-import { Button } from "react-native-paper";
+
 import CustomHeader from '../../components/CustomLogoHeader'
 import {
   requestForegroundPermissionsAsync,
@@ -11,20 +11,13 @@ import AutoComplete from '../../components/Map/AutoComplete';
 import FindRouteModal from '../../components/Map/FindRouteModal';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-type LocationName = {
-  location_name: string | undefined;
-};
-type Coord = {
-  latitude: number;
-  longitude: number;
-};
-type CoordName = LocationName & Coord;
+import CustomLoader from '../../components/CustomLoader';
+import { Coord, CoordName } from '../../types/LocationTypes';
 
 const HomeScreen = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const navigation = useNavigation();
-    const [route, setRoute] = useState<Coord[]>([])
     const [currentLocation, setCurrentLocation] = useState<CoordName>({
       location_name: "",
       latitude: 0,
@@ -47,15 +40,16 @@ const HomeScreen = () => {
     }
 
     useEffect(() => {
+      setIsLoading(true);
       requestLocationPermission();
       getCurrentLocation();
     }, []);
 
     useEffect(()=>{
-        if(destination.latitude!=0){
-            onRegionChange()
-            saveLocationData(destination,"To")
-        }
+      if(destination.latitude!=0){
+          onRegionChange()
+          saveLocationData(destination,"To")
+      }
     },[destination])
 
     const saveLocationData = async (locationData:Coord, tag: string) => {
@@ -65,7 +59,7 @@ const HomeScreen = () => {
 
         // Save the location data to AsyncStorage
         await AsyncStorage.setItem(tag + "LocationData", locationDataString);
-        console.log(locationDataString);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -88,16 +82,14 @@ const HomeScreen = () => {
         console.log("Permission to access location was denied");
       }
     };
-    
-    
 
   return (
     <View className="flex flex-1">
       {/* Header */}
       <CustomHeader />
-
+      {isLoading && <CustomLoader />}
       {/* Map + Current Location */}
-      {currentLocation && (
+      {!isLoading && currentLocation && (
         <MapView
           style={styles.map}
           ref={mapRef}
@@ -114,7 +106,7 @@ const HomeScreen = () => {
           zoomEnabled={true}
           pitchEnabled={true}
           rotateEnabled={true}
-          mapPadding={{ top: 80, right: 0, left: 0, bottom: 0 }}
+          mapPadding={{ top: 80, right: 0, left: 0, bottom: 30 }}
         >
           <Marker
             title="You are here"
@@ -132,23 +124,13 @@ const HomeScreen = () => {
               coordinate={destination}
             />
           )}
-          {route.length != 0 && (
-            <Polyline
-              coordinates={route}
-              strokeColor="#001296"
-              strokeWidth={5}
-              zIndex={10000}
-            />
-          )}
         </MapView>
       )}
-
       {/* Search */}
-      <AutoComplete
+      {!isLoading && <AutoComplete
         label="Find Location"
         onChange={(data) => setDestination(data)}
-      />
-
+      />}
       {/* Find Route Modal */}
       <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
         <FindRouteModal
