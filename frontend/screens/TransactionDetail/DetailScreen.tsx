@@ -24,13 +24,27 @@ type TransactionItemProps = {
 
 const VisaIcon = () => {
     return (
-      <SvgUri
-        width="30"
-        height="20"
-        uri="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
-      />
+        <SvgUri width="30" height="20" uri="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg"/>
     );
-  };
+};
+
+const MastercardIcon = () => {
+    return (
+        <SvgUri width="30" height="20" uri="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"/>
+    );
+};
+
+const CardIconMapping = (brand: any) => {
+    const IconMappingObj = {
+        'Visa': <VisaIcon/>,
+        'Mastercard': <MastercardIcon/>,
+    }
+    return (
+        <View>
+            {IconMappingObj[brand as keyof typeof IconMappingObj]}
+        </View>
+    )
+}
 
 const DetailScreen = () => {
     const route = useRoute();
@@ -126,7 +140,11 @@ const DetailScreen = () => {
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
                         <Text>Payment method</Text>
-                        <Text>{item['payment-method'].brand} {item['payment-method'].type} <VisaIcon/></Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>    
+                            <Text style={{marginRight: 3}}>{item['payment-method']['type']}</Text>
+                            {item['payment-method']['brand'] === 'Visa' ? <VisaIcon/> : <MastercardIcon/>}
+                            <CardIconMapping brand='Visa'/>
+                        </View>
                     </View>
                 </View>
             </ScrollView>

@@ -33,7 +33,7 @@ const Data = [
         'code': '594594992929',
         'payment-medthod': {
             'type': 'Credit card',
-            'brand': 'VISA'
+            'brand': 'Visa'
         }
     },
     {
@@ -48,7 +48,7 @@ const Data = [
         'code': '594594992929',
         'payment-medthod': {
             'type': 'Credit card',
-            'brand': 'VISA'
+            'brand': 'Mastercard'
         }
     },
     {
@@ -63,7 +63,7 @@ const Data = [
         'code': '594594992929',
         'payment-medthod': {
             'type': 'Credit card',
-            'brand': 'VISA'
+            'brand': 'Visa'
         }
     },
     {
@@ -78,7 +78,7 @@ const Data = [
         'code': '594594992929',
         'payment-medthod': {
             'type': 'Credit card',
-            'brand': 'VISA'
+            'brand': 'Visa'
         }
     },
     {
@@ -93,7 +93,7 @@ const Data = [
         'code': '594594992929',
         'payment-medthod': {
             'type': 'Credit card',
-            'brand': 'VISA'
+            'brand': 'Visa'
         }
     },
     {
@@ -108,7 +108,7 @@ const Data = [
         'code': '594594992929',
         'payment-medthod': {
             'type': 'Credit card',
-            'brand': 'VISA'
+            'brand': 'Visa'
         }
     }
 ]
