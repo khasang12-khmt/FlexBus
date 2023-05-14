@@ -17,7 +17,7 @@ const CustomButton: React.FC<CustomButtonProps> = (
       mode="contained"
       onPress={props.onPress}
     >
-      <Text className="text-lg ">{props.text}</Text>
+      <Text className="text-lg py-1">{props.text}</Text>
     </Button>
   );
 };
