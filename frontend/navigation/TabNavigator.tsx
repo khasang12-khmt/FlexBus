@@ -6,6 +6,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 import HistoryScreen from "../screens/History/HistoryScreen";
 import HomeStack from "./HomeStack";
+import HistoryStack from "./HistoryStack";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -39,7 +40,7 @@ const TabNavigator = () => {
         />
         <Tab.Screen
             name="History"
-            component={HistoryScreen}
+            component={HistoryStack}
             options={{
             tabBarLabel: "History",
             tabBarIcon: ({ color }) => (
