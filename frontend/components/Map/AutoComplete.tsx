@@ -74,6 +74,7 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
                   latitude: parseFloat(datum.lat),
                   longitude: parseFloat(datum.lon),
                 });
+                setSearchQuery(datum.display_name);
                 setMenuVisible(false);
               }}
               title={datum.display_name}

@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { BookingModule } from './booking/booking.module';
 import { BusModule } from './bus/bus.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -17,6 +18,7 @@ import { BusModule } from './bus/bus.module';
     AuthModule,
     BookingModule,
     BusModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

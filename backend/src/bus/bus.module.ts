@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BusSchema } from 'entities/bus.entity';
+import { BusController } from './bus.controller';
+import { BusService } from './bus.service';
 
 @Module({
   imports: [
@@ -11,7 +13,7 @@ import { BusSchema } from 'entities/bus.entity';
       },
     ]),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [BusController],
+  providers: [BusService],
 })
 export class BusModule {}

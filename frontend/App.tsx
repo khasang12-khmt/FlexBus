@@ -1,8 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import AppNav from './navigation/AppNav';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import AppNav from "./navigation/AppNav";
 import { useFonts } from "expo-font";
-
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 export default function App() {
   const [loaded] = useFonts({
     RobotoRegular: require("./assets/fonts/Roboto-Regular.ttf"),
@@ -14,5 +15,9 @@ export default function App() {
   if (!loaded) {
     return null;
   }
-  return <AppNav />;
+  return (
+    <Provider store={store}>
+      <AppNav />
+    </Provider>
+  );
 }
