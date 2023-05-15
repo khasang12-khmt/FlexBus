@@ -17,7 +17,7 @@ import CustomImage from "../../components/CustomImage";
 import CustomAuthInput from "../../components/CustomAuthInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import CustomNavigationHeader from "../../components/CustomNavigationHeader";
 import { useDispatch } from "react-redux";
 import { setUserEmail } from "../../redux/reducers";
@@ -42,16 +42,36 @@ const RegisterScreen = () => {
       return;
     }
 
-    const response = await axios.post("http://10.0.2.2:9008/auth/register", {
-      email,
-      password,
-    });
+    // const response = await axios.post(
+    //   "https://be-flexbus-production.up.railway.app/auth/register",
+    //   {
+    //     email,
+    //     password,
+    //   }
+    // );
 
-    // console.log(response.data.code)
-    if (response.data.code === 200) {
-      dispatch(setUserEmail(email));
-      navigation.navigate("Verification");
-    }
+    // // console.log(response.data.code)
+    // if (response.data.message === "OK") {
+    //   dispatch(setUserEmail(email));
+    //   navigation.navigate("Verification");
+    // }
+
+    await axios
+      .post("https://be-flexbus-production.up.railway.app/auth/register", {
+        email,
+        password,
+      })
+      .then((response) => {
+        if (response.data.message === "OK") {
+          dispatch(setUserEmail(email));
+          navigation.navigate("Verification");
+        } else {
+          console.log(response);
+        }
+      })
+      .catch((e: AxiosError) => {
+        console.log(e.message);
+      });
   };
 
   return (
