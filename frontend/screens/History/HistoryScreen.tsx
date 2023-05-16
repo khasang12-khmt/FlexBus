@@ -122,7 +122,7 @@ const TransactionItem = (props: TransactionItemProps) => {
                     <Text style={{ color: '#fff', fontSize: 24 }}>{props.bus_no}</Text>
                 </View>
                 <View style={{ marginLeft: 10, flexDirection: 'column', flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <View style={{backgroundColor: '#C6FFF3', padding: 5, borderRadius: 8, flexDirection: 'row', alignItems: 'center'}}>
                             <Ionicons name="ios-checkmark-circle" size={12} color="#006B5E" />
                             <Text style={{fontWeight: 'bold', color: '#006B5E', marginLeft: 2, fontSize: 12}}>Payment completed</Text>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Appbar } from 'react-native-paper';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
 import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal } from 'react-native';
+import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import { SvgUri } from 'react-native-svg';
 import * as Clipboard from 'expo-clipboard';
+import QRCode from 'react-native-qrcode-svg';
+
 
 type TransactionItemProps = {
     'bus_no': string,
@@ -22,35 +24,11 @@ type TransactionItemProps = {
     }
 }
 
-const VisaIcon = () => {
-    return (
-        <SvgUri width="30" height="20" uri="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg"/>
-    );
-};
-
-const MastercardIcon = () => {
-    return (
-        <SvgUri width="30" height="20" uri="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"/>
-    );
-};
-
-const CardIconMapping = (brand: any) => {
-    const IconMappingObj = {
-        'Visa': <VisaIcon/>,
-        'Mastercard': <MastercardIcon/>,
-    }
-    return (
-        <View>
-            {IconMappingObj[brand as keyof typeof IconMappingObj]}
-        </View>
-    )
-}
-
 const DetailScreen = () => {
     const route = useRoute();
     const [showModal, setShowModal] = useState(false);
     const item = route.params as TransactionItemProps;
-    const navigation = useNavigation();
+    const navigation: NavigationProp<any> = useNavigation();
     const [elevation, setElevation] = useState(0);
     const handleCopyCode = () => {
         Clipboard.setStringAsync(item.code);
@@ -138,13 +116,25 @@ const DetailScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 15}}>
                         <Text>Payment method</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>    
                             <Text style={{marginRight: 3}}>{item['payment-method']['type']}</Text>
-                            {item['payment-method']['brand'] === 'Visa' ? <VisaIcon/> : <MastercardIcon/>}
-                            <CardIconMapping brand='Visa'/>
                         </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+                        <Text style={{ color: '#001356', fontSize: 13}}>
+                            Show this barcode to ticket controller when get on bus
+                        </Text>
+                        <Ionicons name="md-help-circle" size={18} color="#001356" style={{marginLeft: 3}}/>
+                    </View>
+                    <View style={{ marginBottom: 20 }}>
+                        <QRCode value={item['code']}/>
+                    </View>
+                    <View>
+                    <Button icon="help" mode="contained" buttonColor='#001356' onPress={() => navigation.navigate('Payment')}>
+                        <Text>Contact support</Text>
+                    </Button>
                     </View>
                 </View>
             </ScrollView>
