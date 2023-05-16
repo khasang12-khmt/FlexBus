@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { BusStep, Route } from "../../types/RouteTypes";
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import {
   Divider,
   TextInput,
@@ -16,6 +17,7 @@ type BusDetailInfoProps = {
 }
 
 const BusDetailInfo: React.FC<BusDetailInfoProps> = ({info}) => {
+  const navigation: NavigationProp<any> = useNavigation();
   const [busDetail, setBusDetail] = useState<BusDetail>();
   const getBusDetail = () => {
     axios.get(`https://be-flexbus-production.up.railway.app/bus/${info.bus_no}`)
@@ -149,7 +151,7 @@ const BusDetailInfo: React.FC<BusDetailInfoProps> = ({info}) => {
       )}
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => console.log(info)} // Navigate to PaymentScreen
+        onPress={() => navigation.navigate('PaymentStack')} // Navigate to PaymentScreen
       >
         <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-2 px-20 rounded-md py-1">
           <Text
