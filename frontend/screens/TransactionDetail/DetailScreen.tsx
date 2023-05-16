@@ -6,23 +6,7 @@ import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
-
-
-type TransactionItemProps = {
-    'bus_no': string,
-    'timestamp': string,
-    'timestart': string,
-    'departure': string,
-    'timeend': string,
-    'arrival': string,
-    'class': string,
-    'price': string,
-    'code': string,
-    'payment-method': {
-        'type': string,
-        'brand': string,
-    }
-}
+import { TransactionItemProps } from '../../types/TransactionTypes';
 
 const DetailScreen = () => {
     const route = useRoute();
@@ -119,7 +103,7 @@ const DetailScreen = () => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 15}}>
                         <Text>Payment method</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>    
-                            <Text style={{marginRight: 3}}>{item['payment-method']['type']}</Text>
+                            <Text style={{marginRight: 3}}>{item['payment-method']}</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
@@ -132,9 +116,9 @@ const DetailScreen = () => {
                         <QRCode value={item['code']}/>
                     </View>
                     <View>
-                    <Button icon="help" mode="contained" buttonColor='#001356' onPress={() => navigation.navigate('Payment')}>
-                        <Text>Contact support</Text>
-                    </Button>
+                        <Button icon="help" mode="contained" buttonColor='#001356' onPress={() => navigation.navigate('Payment')}>
+                            <Text style={{ fontSize: 24 }}>Contact support</Text>
+                        </Button>
                     </View>
                 </View>
             </ScrollView>

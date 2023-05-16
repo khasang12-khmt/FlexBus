@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HistoryScreen from '../screens/History/HistoryScreen';
 import DetailScreen from '../screens/TransactionDetail/DetailScreen'
-import PaymentScreen from "../screens/Payment/PaymentScreen"; // Development only
+import PaymentStack from "../navigation/PaymentStack"; // Development only
 
 const Stack = createNativeStackNavigator ();
 
@@ -10,7 +10,7 @@ const HistoryStack = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="List" component={HistoryScreen} />
             <Stack.Screen name="Detail" component={DetailScreen} />
-            <Stack.Screen name="Payment" component={PaymentScreen} />{/* Development only */}
+            <Stack.Screen name="Payment" component={PaymentStack} />{/* Development only */}
         </Stack.Navigator>
     );
 };
