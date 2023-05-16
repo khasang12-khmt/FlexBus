@@ -46,12 +46,13 @@ export const userSlice = createSlice({
       state = action.payload;
     },
     clearUser: (state, action: PayloadAction<UserState>) => {
-      // state.id = "";
-      // state.email = "";
-      // state.phoneNumber = "";
-      // state.gender = "";
-      // state.birthday = "";
-      state = initialState;
+      state.id = "";
+      state.email = "";
+      state.phoneNumber = "";
+      state.gender = "";
+      state.birthday = "";
+      state.name = "";
+      state.accessTokenStore = null;
     },
     setAccessTokenStore: (state, action: PayloadAction<string | null>) => {
       // state.id = "";

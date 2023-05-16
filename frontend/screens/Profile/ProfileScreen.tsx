@@ -22,6 +22,7 @@ import {
   clearUser,
   setAccessTokenStore,
   setUser,
+  setUserId,
 } from "../../redux/reducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { useIsFocused } from "@react-navigation/native";
@@ -75,10 +76,27 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
-    dispatch(clearUser);
-    dispatch(setAccessTokenStore(null));
-    await AsyncStorage.removeItem("access_token");
-    navigation.navigate("AuthStack");
+    // dispatch(clearUser);
+    // dispatch(setAccessTokenStore(null));
+    // await AsyncStorage.removeItem("access_token");
+    // navigation.navigate("AuthStack");
+    Alert.alert("Log out", "You will be returned to the login screen", [
+      {
+        text: "Cancel",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Log out",
+        onPress: async () => {
+          dispatch(clearUser);
+          dispatch(setAccessTokenStore(null));
+          await AsyncStorage.removeItem("access_token");
+          navigation.navigate("AuthStack");
+        },
+        style: "destructive"
+      },
+    ]);
   };
 
   const handleUpdate = async () => {
@@ -112,31 +130,64 @@ const ProfileScreen = () => {
   };
 
   const handleDelete = async () => {
-    const access_token = await AsyncStorage.getItem("access_token");
-    await axios
-      .delete(`https://be-flexbus-production.up.railway.app/user/${userId}`, {
-        headers: {
-          Authorization: "Bearer " + access_token,
-        },
-      })
-      .then(async (response) => {
-        if (response.data.code == 200) {
-          dispatch(clearUser);
-          await AsyncStorage.removeItem("access_token");
-          await AsyncStorage.removeItem("user_info");
+    // const access_token = await AsyncStorage.getItem("access_token");
+    // await axios
+    //   .delete(`https://be-flexbus-production.up.railway.app/user/${userId}`, {
+    //     headers: {
+    //       Authorization: "Bearer " + access_token,
+    //     },
+    //   })
+    //   .then(async (response) => {
+    //     if (response.data.code == 200) {
+    //       dispatch(clearUser);
+    //       await AsyncStorage.removeItem("access_token");
+    //       await AsyncStorage.removeItem("user_info");
 
-          navigation.navigate("AuthStack");
-        }
-      })
-      .catch((e: AxiosError) => {
-        console.log("Handle delete", e.message);
-      });
+    //       navigation.navigate("AuthStack");
+    //     }
+    //   })
+    //   .catch((e: AxiosError) => {
+    //     console.log("Handle delete", e.message);
+    //   });
+    Alert.alert("Delete Account", "You cannot undo this action", [
+      {
+        text: "Cancel",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: async () => {
+          const access_token = await AsyncStorage.getItem("access_token");
+          await axios
+            .delete(
+              `https://be-flexbus-production.up.railway.app/user/${userId}`,
+              {
+                headers: {
+                  Authorization: "Bearer " + access_token,
+                },
+              }
+            )
+            .then(async (response) => {
+              if (response.data.code == 200) {
+                dispatch(clearUser);
+                await AsyncStorage.removeItem("access_token");
+                await AsyncStorage.removeItem("user_info");
+                navigation.navigate("AuthStack");
+              }
+            })
+            .catch((e: AxiosError) => {
+              console.log("Handle delete", e.message);
+            });
+        },
+        style: "destructive"
+      },
+    ]);
   };
 
   const getAccessToken = async () => {
     const value = await AsyncStorage.getItem("access_token");
     dispatch(setAccessTokenStore(value));
-
     if (accessToken !== null) {
       // console.log(accessToken)
       getInfo();
@@ -157,6 +208,7 @@ const ProfileScreen = () => {
         setPhoneNumber(data.phoneNumber);
         setGender(data.gender);
         setInputDate(JSON.parse(data.birthDay));
+        setEmail(data.email);
       })
       .catch((e: AxiosError) => {
         console.log("Get info:", e.message);
