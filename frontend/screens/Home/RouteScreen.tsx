@@ -49,7 +49,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${fromLocation.latitude},${fromLocation.longitude}&destination=${toLocation.latitude},${toLocation.longitude}&mode=transit&transit_mode=bus&key=${GOOGLE_API_KEY}&alternatives=true`;
     console.log(url);
     // Testing
-    const test = false;
+    const test = true;
 
     if(test){
       const routes = routeData.routes;
