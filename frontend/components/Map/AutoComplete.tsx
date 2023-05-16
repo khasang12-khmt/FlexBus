@@ -28,7 +28,7 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [data, setData] = useState<Location[]>()
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(label);
   //Allow 1 API call Per Second
   const getAutoComplete = _.debounce(async (query: string) => {
     let str = `https://api.locationiq.com/v1/autocomplete?key=${MAP_API_KEY}&q=${query}&limit=3&dedupe=1`;
@@ -42,8 +42,8 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
   return (
     <View>
       <Searchbar
-        className="mx-4 mt-4 rounded-xl z-999 bg-white border-sky-100 border"
-        placeholder="Find location"
+        className="mx-4 rounded-xl z-999 bg-white border-sky-100 border"
+        placeholder="Find Location"
         onChangeText={(text: string) => setSearchQuery(text)}
         onKeyPress={() => {
           getAutoComplete(searchQuery);

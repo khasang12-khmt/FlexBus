@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, StatusBar } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
 import MapView, { Marker, Polyline } from "react-native-maps";
 
@@ -127,10 +127,12 @@ const HomeScreen = () => {
         </MapView>
       )}
       {/* Search */}
-      {!isLoading && <AutoComplete
-        label="Find Location"
-        onChange={(data) => setDestination(data)}
-      />}
+      {!isLoading && (
+        <AutoComplete
+          label="Find Location"
+          onChange={(data) => setDestination(data)}
+        />
+      )}
       {/* Find Route Modal */}
       <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
         <FindRouteModal
