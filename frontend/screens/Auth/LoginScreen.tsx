@@ -18,12 +18,19 @@ import { TextInput, Button } from "react-native-paper";
 import CustomImage from "../../components/CustomImage";
 import CustomAuthInput from "../../components/CustomAuthInput";
 import CustomButton from "../../components/CustomButton";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import CustomNavigationHeader from "../../components/CustomNavigationHeader";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { setUserEmail } from "../../redux/reducers";
+import {
+  UserState,
+  setAccessTokenStore,
+  setUser,
+  setUserEmail,
+  setUserId,
+} from "../../redux/reducers";
 import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>("");
@@ -33,17 +40,38 @@ const LoginScreen = () => {
   const navigation = useNavigation<any>();
   const imageSource: ImageSourcePropType = require("../../assets/Login.png");
   const dispatch = useDispatch();
+
   const handleLogin = async () => {
-    const response = await axios.post("http://10.0.2.2:9008/auth/login", {
-      email,
-      password,
-    });
-    dispatch(setUserEmail(email));
-    if (!response.data.data.active) {
-      navigation.navigate("Verification");
-    } else {
-      navigation.navigate("AppStack");
-    }
+    await axios
+      .post("https://be-flexbus-production.up.railway.app/auth/login", {
+        email,
+        password,
+      })
+      .then(async (response) => {
+        if (response.data.code == 200) {
+          const data = response.data.data;
+
+          await AsyncStorage.setItem("access_token", data.accessToken);
+          console.log(1, data.accessToken)
+          console.log(1, data.id)
+          dispatch(setUserEmail(email));
+          dispatch(setUserId(data.id));
+          dispatch(setAccessTokenStore(data.access_token))
+
+          if (!data.active) {
+            navigation.navigate("Verification");
+          } else {
+            navigation.navigate("AppStack");
+          }
+        } else {
+          console.log(response.data);
+        }
+      })
+      .catch((e: AxiosError) => {
+        console.log(e.message);
+      });
+
+
   };
   return (
     <KeyboardAvoidingView
