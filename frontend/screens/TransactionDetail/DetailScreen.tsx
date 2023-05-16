@@ -116,8 +116,8 @@ const DetailScreen = () => {
                         <QRCode value={item['code']}/>
                     </View>
                     <View>
-                        <Button icon="help" mode="contained" buttonColor='#001356' onPress={() => navigation.navigate('Payment')}>
-                            <Text style={{ fontSize: 24 }}>Contact support</Text>
+                        <Button icon="help" mode="contained" buttonColor='#001356' >
+                            <Text >Contact support</Text>
                         </Button>
                     </View>
                 </View>
