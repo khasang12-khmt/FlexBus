@@ -3,22 +3,7 @@ import { Appbar } from 'react-native-paper';
 import { ScrollView, View, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-
-type TransactionItemProps = {
-    'bus_no': string,
-    'timestamp': string,
-    'timestart': string,
-    'departure': string,
-    'timeend': string,
-    'arrival': string,
-    'class': string,
-    'price': string,
-    'code': string,
-    'payment-method':  {
-        'type': string,
-        'brand': string,
-    }
-}
+import { TransactionItemProps } from '../../types/TransactionTypes';
 
 const Data = [
     {
@@ -31,10 +16,7 @@ const Data = [
         'class': 'Bussiness Class',
         'price': '3000',
         'code': '594594992929',
-        'payment-medthod': {
-            'type': 'Credit card',
-            'brand': 'Visa'
-        }
+        'payment-medthod': 'Credit card'
     },
     {
         'bus_no': '08',
@@ -46,10 +28,7 @@ const Data = [
         'class': 'Bussiness Class',
         'price': '3000',
         'code': '594594992929',
-        'payment-medthod': {
-            'type': 'Credit card',
-            'brand': 'Mastercard'
-        }
+        'payment-medthod': 'Credit card'
     },
     {
         'bus_no': '08',
@@ -61,10 +40,7 @@ const Data = [
         'class': 'Bussiness Class',
         'price': '3000',
         'code': '594594992929',
-        'payment-medthod': {
-            'type': 'Credit card',
-            'brand': 'Visa'
-        }
+        'payment-medthod': 'Credit card'
     },
     {
         'bus_no': '08',
@@ -76,10 +52,7 @@ const Data = [
         'class': 'Bussiness Class',
         'price': '3000',
         'code': '594594992929',
-        'payment-medthod': {
-            'type': 'Credit card',
-            'brand': 'Visa'
-        }
+        'payment-medthod': 'Credit card'
     },
     {
         'bus_no': '08',
@@ -91,10 +64,7 @@ const Data = [
         'class': 'Bussiness Class',
         'price': '3000',
         'code': '594594992929',
-        'payment-medthod': {
-            'type': 'Credit card',
-            'brand': 'Visa'
-        }
+        'payment-medthod': 'Credit card'
     },
     {
         'bus_no': '08',
@@ -106,10 +76,7 @@ const Data = [
         'class': 'Bussiness Class',
         'price': '3000',
         'code': '594594992929',
-        'payment-medthod': {
-            'type': 'Credit card',
-            'brand': 'Visa'
-        }
+        'payment-medthod': 'Credit card'
     }
 ]
 
@@ -122,7 +89,7 @@ const TransactionItem = (props: TransactionItemProps) => {
                     <Text style={{ color: '#fff', fontSize: 24 }}>{props.bus_no}</Text>
                 </View>
                 <View style={{ marginLeft: 10, flexDirection: 'column', flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <View style={{backgroundColor: '#C6FFF3', padding: 5, borderRadius: 8, flexDirection: 'row', alignItems: 'center'}}>
                             <Ionicons name="ios-checkmark-circle" size={12} color="#006B5E" />
                             <Text style={{fontWeight: 'bold', color: '#006B5E', marginLeft: 2, fontSize: 12}}>Payment completed</Text>

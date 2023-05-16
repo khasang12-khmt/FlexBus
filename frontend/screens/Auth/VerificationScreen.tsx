@@ -17,10 +17,11 @@ import CustomImage from "../../components/CustomImage";
 import CustomAuthInput from "../../components/CustomAuthInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import CustomNavigationHeader from "../../components/CustomNavigationHeader";
-import axios from "axios";
+import axios, { Axios, AxiosError } from "axios";
+import { setUserId } from "../../redux/reducers";
 
 const VerificationScreen = () => {
   const [otp, setOTP] = useState<string>("");
@@ -28,16 +29,36 @@ const VerificationScreen = () => {
   const windowWidth = 0.85 * useWindowDimensions().width;
   const email = useSelector((state: RootState) => state.user.email);
   const imageSource: ImageSourcePropType = require("../../assets/Verification.png");
+  const dispatch = useDispatch();
 
   const handleSubmit = async () => {
-    const response = await axios.post("http://10.0.2.2:9008/auth/otp", {
-      email,
-      otp,
-    });
+    // const response = await axios.post(
+    //   "https://be-flexbus-production.up.railway.app/auth/otp",
+    //   {
+    //     email,
+    //     otp,
+    //   }
+    // );
 
-    if (response.data.code === 200) {
-      navigation.navigate();
-    }
+    // if (response.data.message === "OK") {
+    //   navigation.navigate("Login");
+    // }
+
+    await axios
+      .post("https://be-flexbus-production.up.railway.app/auth/otp", {
+        email,
+        otp,
+      })
+      .then((response) => {
+        if (response.data.code === 200) {
+          navigation.navigate("Login");
+        } else {
+          console.log(response.data);
+        }
+      })
+      .catch((e: AxiosError) => {
+        console.log(e.message);
+      });
   };
   return (
     <KeyboardAvoidingView
