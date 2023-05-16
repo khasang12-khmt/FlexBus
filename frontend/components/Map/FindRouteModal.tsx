@@ -12,6 +12,10 @@ import _ from "lodash";
 import { Picker } from "@react-native-picker/picker";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { MAP_API_KEY } from '../../config/config';
+import AutoComplete from './AutoComplete';
+import FindRouteInput from './FindRouteInput';
 
 type FindRouteModalProps = {
   visible: boolean;
@@ -32,7 +36,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const [selectedValue, setSelectedValue] = useState("0");
+  const [limit, setLimit] = useState<string>("999");
   const [fromLocation, setFromLocation] = useState<CoordName>({
     location_name: "",
     latitude: 0,
@@ -43,14 +47,14 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
     latitude: 0,
     longitude: 0,
   });
-
+  
   useEffect(()=>{
     getLocationData("from","Home");
     getLocationData("to", "To");
   },[visible])
 
   const handleFind = () => {
-    navigation.navigate("Route", { fromLocation, toLocation });
+    navigation.navigate("Route", { fromLocation, toLocation, limit });
     hideModal();
   };
 
@@ -69,14 +73,14 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
         setFromLocation({
           ...fromLocation,
           ...locationData,
-          location_name: tag=="Home"?"Current Location":"To Location",
+          location_name: tag=="Home"?"Current Location":"Recent Location",
         });
       }
       else{
         setToLocation({
           ...toLocation,
           ...locationData,
-          location_name: tag == "Home" ? "Current Location" : "To Location",
+          location_name: tag == "Home" ? "Current Location" : "Recent Location",
         });
       }
     } catch (error) {
@@ -93,97 +97,33 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
           contentContainerStyle={containerStyle}
         >
           {/* From Input */}
-          <TextInput
-            label="From [Departure]"
-            mode="flat"
-            value={fromLocation.location_name}
-            textColor="#001356"
-            onChangeText={(text) =>
-              setFromLocation({ ...fromLocation, location_name: text })
-            }
-            left={
-              <TextInput.Icon
-                icon="map-marker"
-                containerColor="white"
-                size={20}
-              />
-            }
-            right={
-              <TextInput.Icon
-                icon="crosshairs"
-                containerColor="white"
-                size={20}
-                onPress={() => getLocationData("from", "Home")}
-              />
-            }
-            theme={{ roundness: 20 }}
-            style={{
-              overflow: "hidden",
-              backgroundColor: "#fff",
-              marginBottom: 10,
-              height: 50,
-              borderRadius: 20,
-            }}
-            contentStyle={{ backgroundColor: "#fff", borderBottomWidth: 0 }}
-            underlineStyle={{ borderColor: "#001356", borderBottomWidth: 0 }}
-            underlineColor="transparent"
-            activeUnderlineColor="#94A6FD"
+          <FindRouteInput
+            location={fromLocation}
+            setLocation={setFromLocation}
+            tagLocation="Home"
           />
           {/* To Input */}
-          <TextInput
-            label="To [Destination]"
-            mode="flat"
-            value={toLocation.location_name}
-            onChangeText={(text) =>
-              setToLocation({ ...toLocation, location_name: text })
-            }
-            left={
-              <TextInput.Icon
-                icon="map-marker"
-                containerColor="white"
-                size={20}
-              />
-            }
-            right={
-              <TextInput.Icon
-                icon="crosshairs"
-                containerColor="white"
-                size={20}
-                onPress={() => getLocationData("to", "Home")}
-              />
-            }
-            textColor="#001356"
-            theme={{ roundness: 20 }}
-            style={{
-              overflow: "hidden",
-              backgroundColor: "#fff",
-              borderRadius: 20,
-              marginBottom: 10,
-              height: 50,
-              width: "100%",
-              borderBottomWidth: 0,
-            }}
-            contentStyle={{ backgroundColor: "#fff", borderBottomWidth: 0 }}
-            underlineStyle={{ borderColor: "#001356", borderBottomWidth: 0 }}
-            underlineColor="transparent"
-            activeUnderlineColor="#94A6FD"
+          <FindRouteInput
+            location={toLocation}
+            setLocation={setToLocation}
+            tagLocation="To"
           />
 
           {/* Maximum Transit */}
-          <View className="w-[75%] rounded-[20px] overflow-hidden">
+          <View className="w-[80%] rounded-[20px] overflow-hidden">
             <Picker
               style={{
                 backgroundColor: "white",
                 height: 45,
                 margin: 0,
+                zIndex: 1,
               }}
               className="mr-2 w-1/3 h-1/4 rounded-xl pb-1"
               placeholder="Maximum Transits"
-              selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }
+              selectedValue={limit}
+              onValueChange={(itemValue) => setLimit(itemValue)}
             >
+              <Picker.Item label="Maximum Transits - All" value="999" />
               <Picker.Item label="Maximum Transits - 1" value="1" />
               <Picker.Item label="Maximum Transits - 2" value="2" />
               <Picker.Item label="Maximum Transits - 3" value="3" />

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StatusBar } from "react-native";
 import React, {useEffect, useState} from 'react'
 import { GOOGLE_API_KEY } from '../../config/config';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,15 +12,14 @@ import { Coord, CoordName } from "../../types/LocationTypes";
 import { BusStep, Route } from "../../types/RouteTypes";
 
 type RootStackParamList = {
-  Route: { fromLocation: CoordName; toLocation: CoordName };
+  Route: { fromLocation: CoordName; toLocation: CoordName, limit: string };
 };
 
 type RouteScreenProps = NativeStackScreenProps<RootStackParamList, "Route">;
 
 const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
-  const { fromLocation, toLocation } = route.params;
+  const { fromLocation, toLocation, limit } = route.params;
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  
   const [routes,setRoutes] = useState<Route[]>([]);
 
   const fetchLocationByAddress = (typ:string, address:string|undefined) => {
@@ -91,23 +90,21 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
       const legs = route?.legs;
 
       legs?.flatMap((leg: any) => {
-        routeSave.price = route.fare?.value;
-        routeSave.departure = leg.start_address;
-        routeSave.arrival = leg.end_address;
-        routeSave.timestart = leg.departure_time?.text;
-        routeSave.timeend = leg.arrival_time?.text;
-        routeSave.duration = leg.duration?.text;
-        routeSave.distance = leg.distance?.text;
-
         const busSteps = leg.steps.filter(
           (step: any) =>
             step.travel_mode === "TRANSIT" &&
             step.transit_details.line.vehicle.type === "BUS"
         );
-
-        if (!busSteps || busSteps.length == 0)
+        if (!busSteps || busSteps.length == 0 || busSteps.length > eval(limit))
           console.log("No bus routes found");
         else {
+          routeSave.price = route.fare?.value;
+          routeSave.departure = leg.start_address;
+          routeSave.arrival = leg.end_address;
+          routeSave.timestart = leg.departure_time?.text;
+          routeSave.timeend = leg.arrival_time?.text;
+          routeSave.duration = leg.duration?.text;
+          routeSave.distance = leg.distance?.text;
           let busStep: BusStep = {
             bus_no: "0",
             departure: "0",
@@ -127,8 +124,8 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
             busStep.duration = step.duration.text;
             routeSave.busSteps.push(JSON.parse(JSON.stringify(busStep)));
           });
+          if (routeSave.price) routeSaves.push(routeSave);
         }
-        if (routeSave.price) routeSaves.push(routeSave);
       });
     });
     setRoutes(routeSaves);
@@ -139,12 +136,14 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
     setIsLoading(true);
     if (
       fromLocation.location_name != "Current Location" &&
-      fromLocation.location_name != "To Location"
+      fromLocation.location_name != "Recent Location" &&
+      fromLocation.latitude == 0
     )
       fetchLocationByAddress("from", fromLocation.location_name);
     if (
       toLocation.location_name != "Current Location" &&
-      toLocation.location_name != "To Location"
+      toLocation.location_name != "Recent Location" &&
+      toLocation.latitude == 0
     )
       fetchLocationByAddress("to", toLocation.location_name);
     fetchRoute();
@@ -152,6 +151,11 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
 
   return (
     <View className="flex flex-1 flex-col">
+      <StatusBar
+        backgroundColor="#000"
+        translucent={true}
+        barStyle="light-content"
+      />
       <CustomNavigationHeader name="Search Result" navigateBackEnable={true} />
       {isLoading ? (
         <CustomLoader />
@@ -163,7 +167,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "auto"
+                marginTop: "auto",
               }}
             >
               <Icon name="error-outline" size={50} color="#888" />
