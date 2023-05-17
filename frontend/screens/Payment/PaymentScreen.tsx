@@ -94,10 +94,10 @@ const PaymentScreen = () => {
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{item.arrival}</Text>
                         </View>
                     </View>
-                    <View style={{ width: '90%', height: 0.5, backgroundColor: '#767680', marginVertical: 10 }}></View>
+                    <View style={{ width: '90%', height: 0.5, backgroundColor: '#767680', marginVertical: 7 }}></View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-between', marginBottom: 20 }}>
-                        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Total</Text>
-                        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{item.price} VND</Text>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Total</Text>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{item.price} VND</Text>
                     </View>
                     <View style={{width: '100%', marginBottom: 10}}>
                         <TextInput
@@ -166,13 +166,13 @@ const PaymentScreen = () => {
                         <View><MastercardIcon/></View>
                     </View>
                     <View style={{ width: '100%', marginBottom: 10 }}>
-                        <Button mode="contained" buttonColor='#001356' onPress={handleConfirm} style={{ borderRadius: 10, padding: 10}}>
-                            <Text style={{ fontSize: 22 }}>Confirm</Text>
+                        <Button mode="contained" buttonColor='#001356' onPress={handleConfirm} style={{ borderRadius: 10, padding: 5}}>
+                            <Text style={{ fontSize: 20 }}>Confirm</Text>
                         </Button>
                     </View>
                     <View style={{ width: '100%' }}>
-                        <Button mode="contained" buttonColor='#fff' onPress={() => navigation.goBack()} style={{ borderRadius: 10, padding: 10, borderColor: '#001356', borderWidth: 1}}>
-                            <Text style={{ fontSize: 22, color: '#001356' }}>Cancel</Text>
+                        <Button mode="contained" buttonColor='#fff' onPress={() => navigation.goBack()} style={{ borderRadius: 10, padding: 5, borderColor: '#001356', borderWidth: 1}}>
+                            <Text style={{ fontSize: 20, color: '#001356' }}>Cancel</Text>
                         </Button>
                     </View>
                 </View>

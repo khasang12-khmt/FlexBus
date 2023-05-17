@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import RouteResultItem from '../../components/Map/RouteResultItem';
 import CustomLoader from "../../components/CustomLoader";
-import { Title, Subheading } from "react-native-paper";
+import { Title, Subheading, SegmentedButtons } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {routeData} from "../../data"
 import { Coord, CoordName } from "../../types/LocationTypes";
@@ -15,10 +15,21 @@ type RootStackParamList = {
   Route: { fromLocation: CoordName; toLocation: CoordName, limit: string };
 };
 
+type Button = {
+  value: string;
+  label: string;
+  uncheckedColor: string;
+  checkedColor: string;
+  showSelectedCheck: boolean;
+};
+
 type RouteScreenProps = NativeStackScreenProps<RootStackParamList, "Route">;
 
 const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
   const { fromLocation, toLocation, limit } = route.params;
+  const [routeFilterButtons,setRouteFilterButtons] = useState<Button[]>()
+  
+  const [busCnt, setBusCnt] = useState<string>("1");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [routes,setRoutes] = useState<Route[]>([]);
 
@@ -76,6 +87,19 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
 
   const parseRoute = (routes: any) => {
     let routeSaves: Route[] = [];
+    const len = routes.length.toString()
+    setRouteFilterButtons(
+      Array.from(
+        { length: eval(limit) > len ? len : eval(limit) },
+        (_, index) => ({
+          value: index.toString(),
+          label: index.toString(),
+          uncheckedColor: "#001356",
+          checkedColor: "#6072C4",
+          showSelectedCheck: true,
+        })
+      ).slice(1)
+    );
     routes.forEach((route: any) => {
       let routeSave: Route = {
         price: "0",
@@ -157,6 +181,16 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
         barStyle="light-content"
       />
       <CustomNavigationHeader name="Search Result" navigateBackEnable={true} />
+      <View className="mx-4 pb-3">
+        {routeFilterButtons && routeFilterButtons.length >= 1 && (
+          <SegmentedButtons
+            value={busCnt}
+            onValueChange={setBusCnt}
+            buttons={routeFilterButtons}
+          />
+        )}
+      </View>
+
       {isLoading ? (
         <CustomLoader />
       ) : (
@@ -178,7 +212,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           {routes &&
             routes.length > 0 &&
             routes.map((route: Route, index) => (
-              <RouteResultItem key={index} route={route} />
+              <RouteResultItem key={index} route={route} limit={busCnt} />
             ))}
         </ScrollView>
       )}
