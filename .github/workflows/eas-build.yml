@@ -4,8 +4,11 @@ on:
   push:
     branches:
       - main
+      - map
 jobs:
   build:
+    name: Change directory
+    run: cd ./frontend
     name: Install and build
     runs-on: ubuntu-latest
     steps:
@@ -19,8 +22,6 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-      - name: Change directory
-        run: cd ./frontend
       - name: Install dependencies
         run: npm ci
       - name: Build on EAS
