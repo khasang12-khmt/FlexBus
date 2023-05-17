@@ -7,9 +7,8 @@ on:
       - map
 jobs:
   build:
-    name: Change directory
-    run: cd ./frontend
     name: Install and build
+    run: cd ./frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
