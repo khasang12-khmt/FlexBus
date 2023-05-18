@@ -25,15 +25,12 @@ import {
   setUserId,
 } from "../../redux/reducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { useIsFocused } from "@react-navigation/native";
-
 registerTranslation("en", en);
 
 const ProfileScreen = () => {
-  // const isFocused = useIsFocused();
-  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<any>();
+
 
   const [usernameLabel, setUsernameLabel] = useState<string | undefined>(
     "FlexBus User"
@@ -240,7 +237,7 @@ const ProfileScreen = () => {
       {!isLoading && accessToken !== null && (
         <View className="flex-1 self-center" style={{ width: windowWidth }}>
           <TouchableOpacity
-            className="flex-row-reverse my-5 mx-3 mt-10"
+            className="flex-row-reverse my-5 mx-3"
             onPress={() => {
               handleLogout();
             }}

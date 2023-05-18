@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -33,46 +34,83 @@ import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const windowWidth = 0.85 * useWindowDimensions().width;
-
   const navigation = useNavigation<any>();
-  const imageSource: ImageSourcePropType = require("../../assets/Login.png");
   const dispatch = useDispatch();
 
-  const handleLogin = async () => {
-    await axios
-      .post("https://be-flexbus-production.up.railway.app/auth/login", {
-        email,
-        password,
-      })
-      .then(async (response) => {
-        if (response.data.code == 200) {
-          const data = response.data.data;
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const imageSource: ImageSourcePropType = require("../../assets/Login.png");
 
-          await AsyncStorage.setItem("access_token", data.accessToken);
-          console.log(1, data.accessToken)
-          console.log(1, data.id)
-          dispatch(setUserEmail(email));
-          dispatch(setUserId(data.id));
-          dispatch(setAccessTokenStore(data.access_token))
-
-          if (!data.active) {
-            navigation.navigate("Verification");
-          } else {
-            navigation.navigate("AppStack");
-          }
-        } else {
-          console.log(response.data);
-        }
-      })
-      .catch((e: AxiosError) => {
-        console.log(e.message);
-      });
-
-
+  const validateEmail = (email: string) => {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
   };
+
+  const handleLogin = async () => {
+    if (!validateEmail(email)) {
+      const title = "Invalid Email";
+      const message =
+        "You have entered an invalid email address. Please try again.";
+      Alert.alert(
+        title,
+        message,
+        [
+          {
+            text: "OK",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    } else {
+      await axios
+        .post("https://be-flexbus-production.up.railway.app/auth/login", {
+          email,
+          password,
+        })
+        .then(async (response) => {
+          if (response.data.code === 200) {
+            const data = response.data.data;
+            await AsyncStorage.setItem("access_token", data.accessToken);
+            console.log(1, data.accessToken);
+            console.log(1, data.id);
+            dispatch(setUserEmail(email));
+            console.log(email);
+            dispatch(setUserId(data.id));
+            dispatch(setAccessTokenStore(data.accessToken));
+
+            if (!data.active) {
+              navigation.navigate("Verification");
+            } else {
+              navigation.navigate("AppStack");
+            }
+          } else if (response.data.code === 401) {
+            const title = "Login failed";
+            const message = "Wrong email address or password";
+            Alert.alert(
+              title,
+              message,
+              [
+                {
+                  text: "OK",
+                },
+              ],
+              {
+                cancelable: true,
+              }
+            );
+          } else {
+            console.log(response.data);
+          }
+        })
+        .catch((e: AxiosError) => {
+          console.log(e.message);
+        });
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       className="flex self-center"
@@ -85,7 +123,9 @@ const LoginScreen = () => {
       <SafeAreaView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <CustomNavigationHeader name="Login" navigateBackEnable={true} />
+            <View className="mt-[-28px]">
+              <CustomNavigationHeader name="Login" navigateBackEnable={true} />
+            </View>
             <CustomImage source={imageSource} />
             <View
               className="flex flex-row flex-wrap"
