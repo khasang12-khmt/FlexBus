@@ -198,8 +198,11 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route, limit}) => {
       </View>
 
       {/* Button */}
-      <TouchableOpacity onPress={() => navigation.navigate("BusDetail", route)}>
-        <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 mb-6 rounded-md">
+      <TouchableOpacity>
+        <Button
+          onPress={() => navigation.navigate("BusDetail", route)}
+          className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 mb-6 rounded-md"
+        >
           <Text
             className="text-white"
             style={{ fontFamily: "RobotoMedium", fontSize: 18 }}

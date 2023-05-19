@@ -1,4 +1,6 @@
 export type BusStep = {
+  uuid: string;
+  price: string;
   bus_no: string;
   departure: string;
   arrival: string;
