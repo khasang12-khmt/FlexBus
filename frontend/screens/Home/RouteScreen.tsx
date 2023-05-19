@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, StatusBar } from "react-native";
+import uuid from "react-native-uuid";
 import React, {useEffect, useState} from 'react'
 import { GOOGLE_API_KEY } from '../../config/config';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -122,7 +123,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
         if (!busSteps || busSteps.length == 0 || busSteps.length > eval(limit))
           console.log("No bus routes found");
         else {
-          routeSave.price = route.fare?.value;
+          routeSave.price = (7000*busSteps.length).toString();
           routeSave.departure = leg.start_address;
           routeSave.arrival = leg.end_address;
           routeSave.timestart = leg.departure_time?.text;
@@ -130,6 +131,8 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           routeSave.duration = leg.duration?.text;
           routeSave.distance = leg.distance?.text;
           let busStep: BusStep = {
+            uuid: uuid.v4().toString(),
+            price: "0",
             bus_no: "0",
             departure: "0",
             arrival: "0",
@@ -138,17 +141,20 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
             distance: "0",
             duration: "0",
           };
-          busSteps.forEach((step: any) => {
-            busStep.bus_no = step.transit_details.line.short_name;
-            busStep.departure = step.transit_details.departure_stop.name;
-            busStep.arrival = step.transit_details.arrival_stop.name;
-            busStep.timestart = step.transit_details.departure_time.text;
-            busStep.timeend = step.transit_details.arrival_time.text;
-            busStep.distance = step.distance.text;
-            busStep.duration = step.duration.text;
-            routeSave.busSteps.push(JSON.parse(JSON.stringify(busStep)));
-          });
-          if (routeSave.price) routeSaves.push(routeSave);
+          if (routeSave.price){
+            busSteps.forEach((step: any) => {
+              busStep.price = "7000";
+              busStep.bus_no = step.transit_details.line.short_name;
+              busStep.departure = step.transit_details.departure_stop.name;
+              busStep.arrival = step.transit_details.arrival_stop.name;
+              busStep.timestart = step.transit_details.departure_time.text;
+              busStep.timeend = step.transit_details.arrival_time.text;
+              busStep.distance = step.distance.text;
+              busStep.duration = step.duration.text;
+              routeSave.busSteps.push(JSON.parse(JSON.stringify(busStep)));
+            });
+            routeSaves.push(routeSave);
+          }
         }
       });
     });
