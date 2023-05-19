@@ -39,17 +39,16 @@ type BusDetailScreenNavigationProp = NativeStackNavigationProp<
 >;
 const RouteResultItem: React.FC<RouteResultItemProps> = ({route, limit}) => {
   const navigation = useNavigation<BusDetailScreenNavigationProp>();
-  console.log(limit);
   if (route.busSteps.length!=eval(limit)) return null;
-    const calcWalkingTime = () => {
-      const total = parseFloat(route.distance.split(" ")[0]);
-      const sum = route.busSteps.reduce((accumulator, currentValue) => {
-        return accumulator + parseFloat(currentValue.distance.split(" ")[0]);
-      }, 0);
-      if (total < sum) return "0 km";
-      let res = (total - sum).toFixed(1);
-      return res.toString() + " km";
-    };
+  const calcWalkingTime = () => {
+    const total = parseFloat(route.distance.split(" ")[0]);
+    const sum = route.busSteps.reduce((accumulator, currentValue) => {
+      return accumulator + parseFloat(currentValue.distance.split(" ")[0]);
+    }, 0);
+    if (total < sum) return "0 km";
+    let res = (total - sum).toFixed(1);
+    return res.toString() + " km";
+  };
   return (
     <View className="flex flex-col m-5">
       {route.busSteps.map((busStep, index: number) => (
@@ -198,11 +197,8 @@ const RouteResultItem: React.FC<RouteResultItemProps> = ({route, limit}) => {
       </View>
 
       {/* Button */}
-      <TouchableOpacity>
-        <Button
-          onPress={() => navigation.navigate("BusDetail", route)}
-          className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 mb-6 rounded-md"
-        >
+      <TouchableOpacity onPress={() => navigation.navigate("BusDetail", route)}>
+        <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 mb-6 rounded-md">
           <Text
             className="text-white"
             style={{ fontFamily: "RobotoMedium", fontSize: 18 }}

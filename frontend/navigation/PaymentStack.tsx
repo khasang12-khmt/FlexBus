@@ -5,7 +5,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import { BusStep } from "../types/RouteTypes";
 
 type PaymentStackParamList = {
-  Payment: BusStep;
+  Payment: {busStep: BusStep};
   Success: undefined;
   Home: undefined;
 };

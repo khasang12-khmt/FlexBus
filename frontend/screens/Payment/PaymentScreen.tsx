@@ -57,7 +57,7 @@ type PaymentStackScreenNavigationProp = NativeStackScreenProps<
 
 const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, route}) => {
   //const navigation: NavigationProp<any> = useNavigation();
-  const busStepInfo = route.params?.busStep;
+  const busStepInfo = route.params;
   console.log(busStepInfo); // use data here
 
   const [elevation, setElevation] = useState(0);

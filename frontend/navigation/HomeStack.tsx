@@ -6,6 +6,7 @@ import RouteScreen from "../screens/Home/RouteScreen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import BusDetailScreen from "../screens/Bus/BusDetailScreen";
 import PaymentStack from "../navigation/PaymentStack"
+import { Route } from "../types/RouteTypes";
 
 type LocationName = {
   location_name: string | undefined;
@@ -18,8 +19,8 @@ type CoordName = LocationName & Coord;
 
 type HomeStackParamList = {
   Home: undefined;
-  Route: { fromLocation: CoordName; toLocation: CoordName };
-  BusDetail: undefined;
+  Route: { fromLocation: CoordName; toLocation: CoordName, limit: string };
+  BusDetail: Route;
   PaymentStack: undefined;
 };
 
