@@ -39,7 +39,7 @@ type BusDetailScreenNavigationProp = NativeStackNavigationProp<
 >;
 const RouteResultItem: React.FC<RouteResultItemProps> = ({route, limit}) => {
   const navigation = useNavigation<BusDetailScreenNavigationProp>();
-  if (route.busSteps.length!=eval(limit)) return null;
+  if (route.busSteps.length!=parseInt(limit)) return null;
   const calcWalkingTime = () => {
     const total = parseFloat(route.distance.split(" ")[0]);
     const sum = route.busSteps.reduce((accumulator, currentValue) => {

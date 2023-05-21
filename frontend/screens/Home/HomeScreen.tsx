@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, StatusBar } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
 import MapView, { Marker, Polyline } from "react-native-maps";
+import { PROVIDER_GOOGLE } from "react-native-maps";
 
 import CustomHeader from '../../components/CustomLogoHeader'
 import {
@@ -98,6 +99,7 @@ const HomeScreen = () => {
             latitudeDelta: 0.001,
             longitudeDelta: 0.001,
           }}
+          provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           showsMyLocationButton={true}
           followsUserLocation={true}

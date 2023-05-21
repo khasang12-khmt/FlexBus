@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Appbar } from 'react-native-paper';
+import { Appbar, Button } from "react-native-paper";
 import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
 import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal } from 'react-native';
-import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
