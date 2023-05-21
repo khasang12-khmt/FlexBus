@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Appbar } from 'react-native-paper';
 import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
-import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal } from 'react-native';
+import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
@@ -36,7 +36,7 @@ const DetailScreen = () => {
             <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
                 <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
                     <Modal visible={showModal} transparent={true}>
-                        <View style={{ flex: 1, alignItems: 'center', position: 'relative', top: '80%' }}>
+                        <View style={{ flex: 1, alignItems: 'center', position: 'relative', top: '70%' }}>
                             <View style={{
                                     borderRadius: 18,
                                     borderColor:'black',
@@ -51,31 +51,32 @@ const DetailScreen = () => {
                             </View>
                         </View>
                     </Modal>
-                    <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginBottom: 15 }}>
                         <Text style={{ color: '#fff', fontSize: 45 }}>{item.bus_no}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 20 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 }}>
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{item.timestart}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{item.departure}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
-                            <View style={{ width: 32, height: 32, borderRadius: 25, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginHorizontal: 5 }}>
-                            <Ionicons name="bus" size={15} color="#fff" />
-                            </View>
-                            <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
-                        </View>
+                        <Image
+							source={require("../../assets/bus_routes.png")}
+							className="round-lg mb-1"
+							style={{
+								height: 36,
+								width: 100,
+								resizeMode: "contain",
+							}} />
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{item.timeend}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{item.arrival}</Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15}}> 
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5}}> 
                         <Ionicons name="bus" size={12} color="#767680" />
                         <Text style={{ fontSize: 12, color: '#767680', marginLeft: 5}}>{item.class}</Text>
                     </View>
-                    <View style={{ marginBottom: 15 }}>
+                    <View style={{ marginBottom: 5 }}>
                         <Text style={{ fontSize: 30, fontWeight: 'bold'}}>{item.price} VND</Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
@@ -100,7 +101,7 @@ const DetailScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 15}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
                         <Text>Payment method</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>    
                             <Text style={{marginRight: 3}}>{item['payment-method']}</Text>
@@ -123,7 +124,7 @@ const DetailScreen = () => {
                 </View>
             </ScrollView>
         </>
-  )
+    )
 }
 
 export default DetailScreen
