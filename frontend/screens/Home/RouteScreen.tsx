@@ -91,7 +91,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
     const len = routes.length.toString()
     setRouteFilterButtons(
       Array.from(
-        { length: eval(limit) > len ? len : eval(limit) },
+        { length: parseInt(limit) > len ? len : parseInt(limit) },
         (_, index) => ({
           value: index.toString(),
           label: index.toString(),
@@ -120,7 +120,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
             step.travel_mode === "TRANSIT" &&
             step.transit_details.line.vehicle.type === "BUS"
         );
-        if (!busSteps || busSteps.length == 0 || busSteps.length > eval(limit))
+        if (!busSteps || busSteps.length == 0 || busSteps.length > parseInt(limit))
           console.log("No bus routes found");
         else {
           routeSave.price = (7000*busSteps.length).toString();
