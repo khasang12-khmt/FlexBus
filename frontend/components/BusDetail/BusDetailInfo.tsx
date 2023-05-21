@@ -151,9 +151,9 @@ const BusDetailInfo: React.FC<BusDetailInfoProps> = ({info}) => {
       )}
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => navigation.navigate('PaymentStack')} // Navigate to PaymentScreen
+        onPress={() => navigation.navigate('PaymentStack',{screen:"Payment",params:info})} // Navigate to PaymentScreen
       >
-        <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-5 px-20 rounded-md py-1">
+        <Button className="flex items-center justify-center flex-row mx-auto bg-[#001356] mt-3 px-20 rounded-md py-1">
           <Text
             className="text-white"
             style={{ fontFamily: "RobotoMedium", fontSize: 21 }}

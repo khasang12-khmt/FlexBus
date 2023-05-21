@@ -2,10 +2,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PaymentScreen from '../screens/Payment/PaymentScreen';
 import SuccessScreen from '../screens/Payment/SuccessScreen';
 import HomeScreen from "../screens/Home/HomeScreen";
+import { BusStep } from "../types/RouteTypes";
 
-const Stack = createNativeStackNavigator ();
+type PaymentStackParamList = {
+  Payment: {busStep: BusStep};
+  Success: undefined;
+  Home: undefined;
+};
 
-const HistoryStack = () => {
+const Stack = createNativeStackNavigator<PaymentStackParamList>();
+
+const PaymentStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Payment" component={PaymentScreen} />
@@ -15,4 +22,4 @@ const HistoryStack = () => {
     );
 };
 
-export default HistoryStack;
+export default PaymentStack;
