@@ -26,7 +26,6 @@ import { RootState } from "../../redux/store";
 import {
   UserState,
   setAccessTokenStore,
-  setUser,
   setUserEmail,
   setUserId,
 } from "../../redux/reducers";
@@ -74,10 +73,10 @@ const LoginScreen = () => {
           if (response.data.code === 200) {
             const data = response.data.data;
             await AsyncStorage.setItem("access_token", data.accessToken);
-            console.log(1, data.accessToken);
-            console.log(1, data.id);
+            // console.log(1, data.accessToken);
+            // console.log(1, data.id);
             dispatch(setUserEmail(email));
-            console.log(email);
+            // console.log(email);
             dispatch(setUserId(data.id));
             dispatch(setAccessTokenStore(data.accessToken));
 

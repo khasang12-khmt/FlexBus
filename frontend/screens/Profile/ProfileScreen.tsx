@@ -21,16 +21,15 @@ import {
   UserState,
   clearUser,
   setAccessTokenStore,
-  setUser,
   setUserId,
 } from "../../redux/reducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NotLoggedScreen from "./NotLoggedScreen";
 registerTranslation("en", en);
 
 const ProfileScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<any>();
-
 
   const [usernameLabel, setUsernameLabel] = useState<string | undefined>(
     "FlexBus User"
@@ -65,11 +64,6 @@ const ProfileScreen = () => {
     },
   ];
 
-  // const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  // let accessToken: string | null = null;
-  // const [accessToken, setAccessToken] = useState<string | null>(null);
-
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -91,61 +85,48 @@ const ProfileScreen = () => {
           await AsyncStorage.removeItem("access_token");
           navigation.navigate("AuthStack");
         },
-        style: "destructive"
+        style: "destructive",
       },
     ]);
   };
 
   const handleUpdate = async () => {
-    const response = await axios.patch(
-      `https://be-flexbus-production.up.railway.app/user`,
-      {
-        id: userId,
-        name: username,
-        phoneNumber: phoneNumber,
-        gender: gender,
-        birthDay: inputDate,
-      }
-    );
+    // const access_token = await AsyncStorage.getItem("access_token");
 
-    const data = response.data.data;
-
-    // const userInfo: UserState = {
-    //   id: userId,
-    //   email: email,
-    //   phoneNumber: data.phoneNumber,
-    //   gender: data.gender,
-    //   birthday: data.birthDay,
-    //   name: data.name,
-    // };
-
-    // dispatch(setUser(userInfo));
-    await AsyncStorage.setItem("access_token", data.accessToken);
-    // await AsyncStorage.setItem("user_info", JSON.stringify(userInfo));
+    await axios
+      .patch(
+        `https://be-flexbus-production.up.railway.app/user`,
+        {
+          id: userId,
+          name: username,
+          phoneNumber: phoneNumber,
+          gender: gender,
+          birthDay: inputDate,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.code == 200) {
+          Alert.alert("Update Successfully", "", [
+            {
+              text: "OK",
+              onPress: () => {},
+            },
+          ]);
+        }
+      })
+      .catch((e: AxiosError) => {
+        console.log("Handle update:", e.message);
+      });
 
     setUsernameLabel(username);
   };
 
   const handleDelete = async () => {
-    // const access_token = await AsyncStorage.getItem("access_token");
-    // await axios
-    //   .delete(`https://be-flexbus-production.up.railway.app/user/${userId}`, {
-    //     headers: {
-    //       Authorization: "Bearer " + access_token,
-    //     },
-    //   })
-    //   .then(async (response) => {
-    //     if (response.data.code == 200) {
-    //       dispatch(clearUser);
-    //       await AsyncStorage.removeItem("access_token");
-    //       await AsyncStorage.removeItem("user_info");
-
-    //       navigation.navigate("AuthStack");
-    //     }
-    //   })
-    //   .catch((e: AxiosError) => {
-    //     console.log("Handle delete", e.message);
-    //   });
     Alert.alert("Delete Account", "You cannot undo this action", [
       {
         text: "Cancel",
@@ -155,13 +136,13 @@ const ProfileScreen = () => {
       {
         text: "Delete",
         onPress: async () => {
-          const access_token = await AsyncStorage.getItem("access_token");
+          // const access_token = await AsyncStorage.getItem("access_token");
           await axios
             .delete(
               `https://be-flexbus-production.up.railway.app/user/${userId}`,
               {
                 headers: {
-                  Authorization: "Bearer " + access_token,
+                  Authorization: "Bearer " + accessToken,
                 },
               }
             )
@@ -169,15 +150,14 @@ const ProfileScreen = () => {
               if (response.data.code == 200) {
                 dispatch(clearUser);
                 await AsyncStorage.removeItem("access_token");
-                await AsyncStorage.removeItem("user_info");
                 navigation.navigate("AuthStack");
               }
             })
             .catch((e: AxiosError) => {
-              console.log("Handle delete", e.message);
+              console.log("Handle delete:", e.message);
             });
         },
-        style: "destructive"
+        style: "destructive",
       },
     ]);
   };
@@ -186,7 +166,7 @@ const ProfileScreen = () => {
     const value = await AsyncStorage.getItem("access_token");
     dispatch(setAccessTokenStore(value));
     if (accessToken !== null) {
-      // console.log(accessToken)
+      console.log("Access Token", accessToken);
       getInfo();
     }
     setIsLoading(false);
@@ -204,8 +184,9 @@ const ProfileScreen = () => {
         setUsername(data.name);
         setPhoneNumber(data.phoneNumber);
         setGender(data.gender);
-        setInputDate(JSON.parse(data.birthDay));
+        setInputDate(new Date(data.birthDay));
         setEmail(data.email);
+        setUsernameLabel(username);
       })
       .catch((e: AxiosError) => {
         console.log("Get info:", e.message);
@@ -216,24 +197,13 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     getAccessToken();
-  }, []);
+    console.log(accessToken);
+  }, [accessToken]);
 
   return (
     <ScrollView>
       {isLoading && <CustomLoader />}
-      {!isLoading && accessToken === null && (
-        <View className="flex items-center justify-center self-center mt-60">
-          <Text className="text-[#001B3F] text-base">
-            Please log in to use many features of FlexBus
-          </Text>
-          <CustomButton
-            text="Login"
-            onPress={() => {
-              navigation.navigate("AuthStack");
-            }}
-          />
-        </View>
-      )}
+      {!isLoading && accessToken === null && <NotLoggedScreen />}
       {!isLoading && accessToken !== null && (
         <View className="flex-1 self-center" style={{ width: windowWidth }}>
           <TouchableOpacity
@@ -311,7 +281,7 @@ const ProfileScreen = () => {
             <DatePickerInput
               className="my-1 basis-full"
               locale="en"
-              label="Birthdate"
+              label="Birthday"
               mode="outlined"
               value={inputDate}
               onChange={(d) => setInputDate(d)}
