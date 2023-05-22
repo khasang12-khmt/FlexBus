@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {routeData} from "../../data"
 import { Coord, CoordName } from "../../types/LocationTypes";
 import { BusStep, Route } from "../../types/RouteTypes";
+import * as Sentry from "@sentry/react-native";
 
 type RootStackParamList = {
   Route: { fromLocation: CoordName; toLocation: CoordName, limit: string };
@@ -45,16 +46,19 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           alert("Location Not Found");
           navigation.goBack();
         }
-        if(typ==="from"){
-            fromLocation.latitude = location.lat;
-            fromLocation.longitude = location.lng;
+        if (typ === "from") {
+          fromLocation.latitude = location.lat;
+          fromLocation.longitude = location.lng;
+        } else {
+          toLocation.latitude = location.lat;
+          toLocation.longitude = location.lng;
         }
-        else {
-            toLocation.latitude = location.lat;
-            toLocation.longitude = location.lng;
-        }
+        Sentry.captureMessage("Success");
       })
-      .catch((error) => console.error(error));
+      .catch((err) => {
+        Sentry.captureException(err);
+        console.log(err);
+      });
   }
 
   const fetchRoute = () => {
@@ -80,8 +84,12 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           parseRoute(routes);
 
           setIsLoading((load) => false);
+          Sentry.captureMessage("Success");
         })
-        .catch((error) => console.error(error));
+        .catch((err) => {
+          Sentry.captureException(err);
+          console.log(err);
+        });
     }
     
   }
