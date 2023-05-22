@@ -16,13 +16,21 @@ const CustomAuthInput: React.FC<CustomAuthInputProps> = (
   return (
     <TextInput
       // label={"Email"}
-      className="basis-full my-1 border bg-white rounded-xl border-[#767680]"
+      mode="outlined"
+      // className="basis-full my-1 border bg-white rounded-xl border-[#767680]"
+      className="basis-full my-1"
       placeholder={props.placeholder}
       value={props.value}
       onChangeText={props.onChangeText}
-      underlineColor="transparent"
       secureTextEntry={props.isSecure}
       right={props.right}
+      activeOutlineColor="#001356"
+      outlineStyle={{
+        borderRadius: 12,
+      }}
+      contentStyle={{
+        height: 54,
+      }}
     />
   );
 };

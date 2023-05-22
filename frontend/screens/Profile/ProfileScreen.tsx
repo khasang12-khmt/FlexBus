@@ -84,8 +84,7 @@ const ProfileScreen = () => {
           onPress: () => setIsScanning(false),
         },
       ]);
-    }
-    else {
+    } else {
       Alert.alert(`Scan Failed`, `Invalid type: ${type}`, [
         {
           text: "OK",
@@ -103,10 +102,6 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
-    // dispatch(clearUser);
-    // dispatch(setAccessTokenStore(null));
-    // await AsyncStorage.removeItem("access_token");
-    // navigation.navigate("AuthStack");
     Alert.alert("Log out", "You will be returned to the login screen", [
       {
         text: "Cancel",
@@ -127,8 +122,6 @@ const ProfileScreen = () => {
   };
 
   const handleUpdate = async () => {
-    // const access_token = await AsyncStorage.getItem("access_token");
-
     await axios
       .patch(
         `https://be-flexbus-production.up.railway.app/user`,
@@ -206,6 +199,7 @@ const ProfileScreen = () => {
       console.log("Access Token", accessToken);
       await getInfo();
     }
+    setUsernameLabel(username);
     setIsLoading(false);
   };
 
@@ -235,7 +229,6 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     getAccessToken();
-    console.log(accessToken);
   }, [accessToken]);
 
   return (
@@ -341,6 +334,17 @@ const ProfileScreen = () => {
                         borderWidth: 1,
                       },
                     }}
+                    dropDownStyle={{
+                      backgroundColor: "#DDE1FF",
+                      borderRadius: 12
+                    }}
+                    dropDownItemStyle={{
+                      backgroundColor: "#DDE1FF"
+                    }}
+                    dropDownItemSelectedStyle={{
+                      backgroundColor: "#001356",
+                    }}
+                    activeColor="#FFFFFF"
                   />
                 </View>
                 <DatePickerInput

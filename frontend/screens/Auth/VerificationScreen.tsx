@@ -25,6 +25,7 @@ import axios, { Axios, AxiosError } from "axios";
 import { setUserId } from "../../redux/reducers";
 
 const VerificationScreen = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation = useNavigation<any>();
   const windowWidth = 0.85 * useWindowDimensions().width;
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const VerificationScreen = () => {
   const imageSource: ImageSourcePropType = require("../../assets/Verification.png");
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     await axios
       .post("https://be-flexbus-production.up.railway.app/auth/otp", {
         email,
@@ -62,11 +64,12 @@ const VerificationScreen = () => {
       .catch((e: AxiosError) => {
         console.log(e.message);
       });
+    setIsLoading(false);
   };
   return (
     <KeyboardAvoidingView
       className="flex-1 self-center"
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{
         width: windowWidth,
       }}
@@ -91,13 +94,13 @@ const VerificationScreen = () => {
                 isSecure={true}
               />
             </View>
-            <CustomButton text="Submit" onPress={handleSubmit} />
-            <View className="flex-row justify-center">
+            <CustomButton text="Submit" onPress={handleSubmit} loading={isLoading}/>
+            {/* <View className="flex-row justify-center">
               <Text className="text-[#636363]">Didn't get the code ? </Text>
               <TouchableOpacity onPress={() => {}}>
                 <Text>Resend</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>
