@@ -10,6 +10,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { TextInput, Button } from "react-native-paper";
@@ -24,26 +25,15 @@ import axios, { Axios, AxiosError } from "axios";
 import { setUserId } from "../../redux/reducers";
 
 const VerificationScreen = () => {
-  const [otp, setOTP] = useState<string>("");
   const navigation = useNavigation<any>();
   const windowWidth = 0.85 * useWindowDimensions().width;
-  const email = useSelector((state: RootState) => state.user.email);
-  const imageSource: ImageSourcePropType = require("../../assets/Verification.png");
   const dispatch = useDispatch();
 
+  const [otp, setOTP] = useState<string>("");
+  const email = useSelector((state: RootState) => state.user.email);
+  const imageSource: ImageSourcePropType = require("../../assets/Verification.png");
+
   const handleSubmit = async () => {
-    // const response = await axios.post(
-    //   "https://be-flexbus-production.up.railway.app/auth/otp",
-    //   {
-    //     email,
-    //     otp,
-    //   }
-    // );
-
-    // if (response.data.message === "OK") {
-    //   navigation.navigate("Login");
-    // }
-
     await axios
       .post("https://be-flexbus-production.up.railway.app/auth/otp", {
         email,
@@ -53,7 +43,20 @@ const VerificationScreen = () => {
         if (response.data.code === 200) {
           navigation.navigate("Login");
         } else {
-          console.log(response.data);
+          const title = "Verify Failed";
+          const message = "Please try again";
+          Alert.alert(
+            title,
+            message,
+            [
+              {
+                text: "OK",
+              },
+            ],
+            {
+              cancelable: true,
+            }
+          );
         }
       })
       .catch((e: AxiosError) => {
@@ -78,6 +81,9 @@ const VerificationScreen = () => {
 
             <CustomImage source={imageSource} />
             <View className="flex-row flex-wrap">
+              <Text className="ml-2 mb-2 text-[#45464F] font-bold">
+                An 6 digits code has been sent to {email}
+              </Text>
               <CustomAuthInput
                 value={otp}
                 onChangeText={setOTP}
@@ -85,15 +91,6 @@ const VerificationScreen = () => {
                 isSecure={true}
               />
             </View>
-            {/* <Button
-        className=""
-        mode="contained"
-        onPress={() => {
-          navigation.navigate("Verification");
-        }}
-      >
-        Send OTP
-      </Button> */}
             <CustomButton text="Submit" onPress={handleSubmit} />
             <View className="flex-row justify-center">
               <Text className="text-[#636363]">Didn't get the code ? </Text>

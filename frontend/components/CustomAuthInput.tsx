@@ -7,6 +7,7 @@ type CustomAuthInputProps = {
   onChangeText: (text: string) => void;
   placeholder: string;
   isSecure: boolean;
+  right?: React.ReactNode;
 };
 
 const CustomAuthInput: React.FC<CustomAuthInputProps> = (
@@ -21,6 +22,7 @@ const CustomAuthInput: React.FC<CustomAuthInputProps> = (
       onChangeText={props.onChangeText}
       underlineColor="transparent"
       secureTextEntry={props.isSecure}
+      right={props.right}
     />
   );
 };

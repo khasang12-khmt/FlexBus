@@ -4,20 +4,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface UserState {
   id: string;
   email: string;
-  phoneNumber: string;
-  gender: string;
-  birthday: string;
-  name: string;
   accessTokenStore: string | null;
 }
 
 const initialState: UserState = {
   id: "",
   email: "",
-  phoneNumber: "",
-  gender: "",
-  birthday: "",
-  name: "",
   accessTokenStore: null,
 };
 
@@ -37,29 +29,10 @@ export const userSlice = createSlice({
     clearUserId: (state) => {
       state.id = "";
     },
-    setUser: (state, action: PayloadAction<UserState>) => {
-      // state.id = action.payload.id;
-      // state.email = action.payload.email;
-      // state.phoneNumber = action.payload.phoneNumber;
-      // state.gender = action.payload.gender;
-      // state.birthday = action.payload.birthday;
-      state = action.payload;
-    },
     clearUser: (state, action: PayloadAction<UserState>) => {
-      state.id = "";
-      state.email = "";
-      state.phoneNumber = "";
-      state.gender = "";
-      state.birthday = "";
-      state.name = "";
-      state.accessTokenStore = null;
+      state = initialState;
     },
     setAccessTokenStore: (state, action: PayloadAction<string | null>) => {
-      // state.id = "";
-      // state.email = "";
-      // state.phoneNumber = "";
-      // state.gender = "";
-      // state.birthday = "";
       state.accessTokenStore = action.payload;
     },
   },
@@ -71,7 +44,6 @@ export const {
   clearUserEmail,
   setUserId,
   clearUserId,
-  setUser,
   clearUser,
   setAccessTokenStore,
 } = userSlice.actions;
