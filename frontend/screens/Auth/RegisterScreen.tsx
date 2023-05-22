@@ -106,7 +106,7 @@ const RegisterScreen = () => {
 
   return (
     <ScrollView>
-      <View
+      <SafeAreaView
         className="self-center"
         // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -217,16 +217,6 @@ const RegisterScreen = () => {
             </View>
             <CustomButton text="Register" onPress={handleRegister} />
 
-            <View className="flex-row  items-center ">
-              <View className="flex-1 h-[1] bg-[#757171] self-center" />
-              <Text className="self-center px-2 text-xs text-[#757171]">
-                Or sign in with
-              </Text>
-              <View className="flex-1 h-[1] bg-[#757171] self-center" />
-            </View>
-            <TouchableOpacity className="flex justify-center items-center my-3">
-              <Image source={require("../../assets/Google.png")} />
-            </TouchableOpacity>
             <View className="flex-row justify-center mb-10">
               <Text className="text-[#636363]">Join us before ? </Text>
               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -235,7 +225,7 @@ const RegisterScreen = () => {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };

@@ -25,13 +25,6 @@ const TabNavigator = () => {
     },
   };
 
-  const navigation = useNavigation<any>();
-  // const userId = useSelector((state: RootState) => state.user.id);
-
-  const isLoggedIn: boolean = useSelector(
-    (state: RootState) => state.user.isLoggedIn
-  );
-
   return (
     <PaperProvider theme={myNavigationTheme}>
       <Tab.Navigator
@@ -70,7 +63,6 @@ const TabNavigator = () => {
               <MaterialCommunityIcons name="account" color={color} size={26} />
             ),
           }}
-          // children={() => <ProfileScreen isLoggedIn={isLoggedIn} />}
         />
       </Tab.Navigator>
     </PaperProvider>

@@ -1,5 +1,6 @@
 import {
   Alert,
+  Dimensions,
   ScrollView,
   TouchableOpacity,
   View,
@@ -25,9 +26,14 @@ import {
 } from "../../redux/reducers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NotLoggedScreen from "./NotLoggedScreen";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import Icon from "react-native-paper/lib/typescript/src/components/Icon";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 registerTranslation("en", en);
 
 const ProfileScreen = () => {
+  const [isScanning, setIsScanning] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<any>();
 
@@ -39,6 +45,7 @@ const ProfileScreen = () => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [gender, setGender] = useState<string>("");
   const [inputDate, setInputDate] = useState<Date>();
+  const [studentID, setStudentID] = useState<string>("");
   const [email, setEmail] = useState<string>(
     useSelector((state: RootState) => state.user.email)
   );
@@ -63,6 +70,35 @@ const ProfileScreen = () => {
       value: "others",
     },
   ];
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(true);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    if (type == "org.iso.Code128") {
+      setStudentID(data);
+      Alert.alert(`Scan Successfully`, `Student ID: ${data}`, [
+        {
+          text: "OK",
+          onPress: () => setIsScanning(false),
+        },
+      ]);
+    }
+    else {
+      Alert.alert(`Scan Failed`, `Invalid type: ${type}`, [
+        {
+          text: "OK",
+          onPress: () => setIsScanning(false),
+        },
+      ]);
+    }
+  };
+
+  const getBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
 
   const dispatch = useDispatch();
 
@@ -102,6 +138,7 @@ const ProfileScreen = () => {
           phoneNumber: phoneNumber,
           gender: gender,
           birthDay: inputDate,
+          student_no: studentID,
         },
         {
           headers: {
@@ -167,7 +204,7 @@ const ProfileScreen = () => {
     dispatch(setAccessTokenStore(value));
     if (accessToken !== null) {
       console.log("Access Token", accessToken);
-      getInfo();
+      await getInfo();
     }
     setIsLoading(false);
   };
@@ -187,12 +224,13 @@ const ProfileScreen = () => {
         setInputDate(new Date(data.birthDay));
         setEmail(data.email);
         setUsernameLabel(username);
+        setStudentID(data.student_no);
       })
       .catch((e: AxiosError) => {
         console.log("Get info:", e.message);
       });
 
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   useEffect(() => {
@@ -201,131 +239,200 @@ const ProfileScreen = () => {
   }, [accessToken]);
 
   return (
-    <ScrollView>
-      {isLoading && <CustomLoader />}
-      {!isLoading && accessToken === null && <NotLoggedScreen />}
-      {!isLoading && accessToken !== null && (
-        <View className="flex-1 self-center" style={{ width: windowWidth }}>
+    <SafeAreaView className="flex flex-col">
+      {isScanning && (
+        <View>
           <TouchableOpacity
-            className="flex-row-reverse my-5 mx-3"
             onPress={() => {
-              handleLogout();
+              setIsScanning(false);
+              setScanned(true);
             }}
+            style={{ marginBottom: 10, marginLeft: 10 }}
           >
-            <Text className="text-[#001356] font-bold text-base">Log out</Text>
+            <MaterialCommunityIcons
+              name="close-circle"
+              size={22}
+              color="#001356"
+            />
           </TouchableOpacity>
-          <View>
-            <Avatar.Image
-              className="mx-auto my-2"
-              size={200}
-              source={require("../../assets/Avatar.png")}
-            />
-          </View>
-          <Text
-            className="mx-auto text-[#001356] font-bold"
-            variant="headlineLarge"
-          >
-            {usernameLabel}
-          </Text>
-
-          <View className="flex flex-row flex-wrap">
-            <TextInput
-              className="my-1 basis-full"
-              mode="outlined"
-              label="Phone Number"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              left={<TextInput.Icon icon="phone-outline" />}
-              outlineColor="#767680"
-              activeOutlineColor="#001356"
-              outlineStyle={{
-                borderRadius: 12,
-                borderWidth: 1,
-              }}
-            />
-            <TextInput
-              className="my-1 basis-full"
-              mode="outlined"
-              label="Username"
-              value={username}
-              onChangeText={setUsername}
-              left={<TextInput.Icon icon="account-outline" />}
-              outlineColor="#767680"
-              activeOutlineColor="#001356"
-              outlineStyle={{
-                borderRadius: 12,
-                borderWidth: 1,
-              }}
-            />
-            <View className="my-1 basis-full">
-              <DropDown
-                label="Gender"
-                mode="outlined"
-                visible={showDropDown}
-                showDropDown={() => setShowDropDown(true)}
-                onDismiss={() => setShowDropDown(false)}
-                value={gender}
-                setValue={setGender}
-                list={genderList}
-                inputProps={{
-                  left: <TextInput.Icon icon={"gender-male-female"} />,
-                  outlineColor: "#767680",
-                  activeOutlineColor: "#001356",
-                  outlineStyle: {
-                    borderRadius: 12,
-                    borderWidth: 1,
-                  },
-                }}
-              />
-            </View>
-            <DatePickerInput
-              className="my-1 basis-full"
-              locale="en"
-              label="Birthday"
-              mode="outlined"
-              value={inputDate}
-              onChange={(d) => setInputDate(d)}
-              inputMode="start"
-              left={<TextInput.Icon icon="cake-variant-outline" />}
-              outlineColor="#767680"
-              activeOutlineColor="#001356"
-              outlineStyle={{
-                borderRadius: 12,
-                borderWidth: 1,
-              }}
-            />
-            <TextInput
-              className="my-1 basis-full"
-              mode="outlined"
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              left={<TextInput.Icon icon="email-outline" />}
-              outlineColor="#767680"
-              activeOutlineColor="#001356"
-              outlineStyle={{
-                borderRadius: 12,
-                borderWidth: 1,
-              }}
-              editable={false}
-            />
-          </View>
-          <View className="flex justify-center items-center">
-            {/* <Button mode="text" textColor="#BA1A1A" onPress={() => {}}>
-            Delete Account
-          </Button> */}
-            <TouchableOpacity onPress={handleDelete}>
-              <Text className="text-[#BA1A1A] font-bold my-3 text-base">
-                Delete Account
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <CustomButton text="Update" onPress={handleUpdate} />
-          </View>
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={{
+              flexBasis: "100%",
+            }}
+          />
         </View>
       )}
-    </ScrollView>
+      {!isScanning && (
+        <ScrollView>
+          {isLoading && <CustomLoader />}
+          {!isLoading && accessToken === null && <NotLoggedScreen />}
+          {!isLoading && accessToken !== null && (
+            <View className="flex-1 self-center" style={{ width: windowWidth }}>
+              <TouchableOpacity
+                className="flex-row-reverse mb-5 mx-3"
+                onPress={() => {
+                  handleLogout();
+                }}
+              >
+                <Text className="text-[#001356] font-bold text-base">
+                  Log out
+                </Text>
+              </TouchableOpacity>
+              <View>
+                <Avatar.Image
+                  className="mx-auto my-2"
+                  size={200}
+                  source={require("../../assets/Avatar.png")}
+                />
+              </View>
+              <Text
+                className="mx-auto text-[#001356] font-bold"
+                variant="headlineLarge"
+              >
+                {usernameLabel}
+              </Text>
+
+              <View className="flex flex-row flex-wrap">
+                <TextInput
+                  className="my-1 basis-full"
+                  mode="outlined"
+                  label="Phone Number"
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                  left={<TextInput.Icon icon="phone-outline" />}
+                  outlineColor="#767680"
+                  activeOutlineColor="#001356"
+                  outlineStyle={{
+                    borderRadius: 12,
+                    borderWidth: 1,
+                  }}
+                />
+                <TextInput
+                  className="my-1 basis-full"
+                  mode="outlined"
+                  label="Username"
+                  value={username}
+                  onChangeText={setUsername}
+                  left={<TextInput.Icon icon="account-outline" />}
+                  outlineColor="#767680"
+                  activeOutlineColor="#001356"
+                  outlineStyle={{
+                    borderRadius: 12,
+                    borderWidth: 1,
+                  }}
+                />
+                <View className="my-1 basis-full">
+                  <DropDown
+                    label="Gender"
+                    mode="outlined"
+                    visible={showDropDown}
+                    showDropDown={() => setShowDropDown(true)}
+                    onDismiss={() => setShowDropDown(false)}
+                    value={gender}
+                    setValue={setGender}
+                    list={genderList}
+                    inputProps={{
+                      left: <TextInput.Icon icon={"gender-male-female"} />,
+                      outlineColor: "#767680",
+                      activeOutlineColor: "#001356",
+                      outlineStyle: {
+                        borderRadius: 12,
+                        borderWidth: 1,
+                      },
+                    }}
+                  />
+                </View>
+                <DatePickerInput
+                  className="my-1 basis-full"
+                  locale="en"
+                  label="Birthday"
+                  mode="outlined"
+                  value={inputDate}
+                  onChange={(d) => setInputDate(d)}
+                  inputMode="start"
+                  left={<TextInput.Icon icon="cake-variant-outline" />}
+                  outlineColor="#767680"
+                  activeOutlineColor="#001356"
+                  outlineStyle={{
+                    borderRadius: 12,
+                    borderWidth: 1,
+                  }}
+                />
+                <TextInput
+                  className="my-1 basis-full"
+                  mode="outlined"
+                  label="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  left={<TextInput.Icon icon="email-outline" />}
+                  outlineColor="#767680"
+                  activeOutlineColor="#001356"
+                  outlineStyle={{
+                    borderRadius: 12,
+                    borderWidth: 1,
+                  }}
+                  editable={false}
+                />
+                <TextInput
+                  className="my-1 basis-full"
+                  mode="outlined"
+                  label="Student ID"
+                  value={studentID}
+                  onChangeText={setStudentID}
+                  left={<TextInput.Icon icon="card-account-details-outline" />}
+                  right={
+                    <TextInput.Icon
+                      icon="barcode-scan"
+                      onPress={() => {
+                        getBarCodeScannerPermissions();
+                        setScanned(false);
+                        setIsScanning(true);
+                      }}
+                    />
+                  }
+                  outlineColor="#767680"
+                  activeOutlineColor="#001356"
+                  outlineStyle={{
+                    borderRadius: 12,
+                    borderWidth: 1,
+                  }}
+                  editable={false}
+                />
+              </View>
+              <View className="flex justify-center items-center">
+                {/* <Button mode="text" textColor="#BA1A1A" onPress={() => {}}>
+            Delete Account
+          </Button> */}
+                <TouchableOpacity onPress={handleDelete}>
+                  <Text className="text-[#BA1A1A] font-bold my-3 text-base">
+                    Delete Account
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <CustomButton text="Update" onPress={handleUpdate} />
+              </View>
+            </View>
+          )}
+          {/* {!isLoading && accessToken !== null && isScanning && (
+          <View>
+            {scanned && <Text>True </Text>}
+            {!scanned && <Text>False </Text>}
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={{
+                // height: `${deviceHeight}`,
+                // width: `${deviceWidth}`,
+                height: 300,
+                width: "100%",
+              }}
+            />
+          </View>
+        )} */}
+        </ScrollView>
+      )}
+    </SafeAreaView>
   );
 };
 

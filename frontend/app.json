@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#101414"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -29,8 +27,8 @@
       ],
       "package": "com.khasang12.FlexBus",
       "config": {
-        "googleMaps":{
-          "apiKey":"AIzaSyDro6sDvVfRXiWwcP6elOjOOV3YxGPAEsA"
+        "googleMaps": {
+          "apiKey": "AIzaSyDro6sDvVfRXiWwcP6elOjOOV3YxGPAEsA"
         }
       }
     },
@@ -55,7 +53,13 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ],
-      ["sentry-expo"]
+      ["sentry-expo"],
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
     ],
     "extra": {
       "eas": {
