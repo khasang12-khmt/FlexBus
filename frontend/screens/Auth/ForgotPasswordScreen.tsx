@@ -28,6 +28,8 @@ const ForgotPasswordScreen = () => {
 
   const handleSend = () => {};
   return (
+    <>
+    <CustomNavigationHeader name="Forgot Password" navigateBackEnable={true} />
     <KeyboardAvoidingView
       className="flex-1 self-center"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -38,10 +40,6 @@ const ForgotPasswordScreen = () => {
       <SafeAreaView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <View className="mt-[-28]">
-            <CustomNavigationHeader name="Forgot Password" navigateBackEnable={true} />
-            </View>
-
             <CustomImage source={imageSource} />
             <View className="flex-row flex-wrap">
               <CustomAuthInput
@@ -56,6 +54,7 @@ const ForgotPasswordScreen = () => {
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
+    </>
   );
 };
 

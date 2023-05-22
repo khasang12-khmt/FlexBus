@@ -67,6 +67,11 @@ const VerificationScreen = () => {
     setIsLoading(false);
   };
   return (
+    <>
+    <CustomNavigationHeader
+      name="Verification"
+      navigateBackEnable={true}
+    />
     <KeyboardAvoidingView
       className="flex-1 self-center"
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -77,11 +82,6 @@ const VerificationScreen = () => {
       <SafeAreaView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <CustomNavigationHeader
-              name="Verification"
-              navigateBackEnable={true}
-            />
-
             <CustomImage source={imageSource} />
             <View className="flex-row flex-wrap">
               <Text className="ml-2 mb-2 text-[#45464F] font-bold">
@@ -105,6 +105,7 @@ const VerificationScreen = () => {
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
+    </>
   );
 };
 
