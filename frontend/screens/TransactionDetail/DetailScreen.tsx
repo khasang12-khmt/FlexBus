@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Appbar, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
 import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
 import { TransactionItemProps } from '../../types/TransactionTypes';
+import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 
 const DetailScreen = () => {
     const route = useRoute();
@@ -28,10 +29,7 @@ const DetailScreen = () => {
     };
     return (
         <>
-            <Appbar.Header style={{ elevation, zIndex: 1 }}>
-                <Appbar.BackAction color="#001356" onPress={() => navigation.goBack()} />
-                <Appbar.Content title="Transaction Detail" color="#001356" titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
-            </Appbar.Header>
+            <CustomNavigationHeader name='Transaction Detail' navigateBackEnable={true} elevation={elevation}/>
             <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
                 <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
                     <Modal visible={showModal} transparent={true}>

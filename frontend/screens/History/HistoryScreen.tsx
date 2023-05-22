@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Appbar } from 'react-native-paper';
 import { ScrollView, View, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { TransactionItemProps } from '../../types/TransactionTypes';
+import CustomNavigationHeader from '../../components/CustomNavigationHeader';
+import { UserState } from '../../redux/reducers';
 
 const Data = [
     {
@@ -143,12 +144,7 @@ const HistoryScreen = () => {
 
     return (
         <>
-            <Appbar.Header style={{ elevation, zIndex: 1 }}>
-                <Appbar.Content 
-                    title="Transaction History"
-                    color="#001356"
-                    titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
-            </Appbar.Header>
+            <CustomNavigationHeader name='Transaction History' navigateBackEnable={false} elevation={elevation}/>
             <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
                 <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
                     {Data.length !== 0 ? Data.map((key, index) => 

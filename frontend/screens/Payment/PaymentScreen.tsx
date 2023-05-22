@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Appbar } from 'react-native-paper';
 import { ScrollView, View, NativeSyntheticEvent, NativeScrollEvent, Text, Image } from 'react-native';
 import { DatePickerInput } from "react-native-paper-dates";
 import { Ionicons } from '@expo/vector-icons';
@@ -64,22 +63,7 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 
 	return (
 		<>
-			<Appbar.Header style={{ elevation, zIndex: 1 }}>
-				<Appbar.BackAction
-					color="#001356"
-					onPress={() => navigation.goBack()}
-				/>
-				<Appbar.Content
-					title="Payment"
-					color="#001356"
-					titleStyle={{
-						fontFamily: "RobotoRegular",
-						fontSize: 22,
-						lineHeight: 28,
-					}}
-				/>
-			</Appbar.Header>
-
+			<CustomNavigationHeader name='Payment' navigateBackEnable={true} elevation={elevation}/>
 			<ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
 				<View
 					style={{
@@ -88,8 +72,7 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 						borderRadius: 18,
 						alignItems: "center",
 						padding: 15,
-					}}
-				>
+					}}>
 					<View
 						style={{
 							width: "100%",
@@ -97,8 +80,7 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 							alignItems: "center",
 							justifyContent: "space-between",
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<Ionicons name="bus" size={15} color="#767680" />
 							<Text style={{ color: "#767680", marginLeft: 3 }}>
