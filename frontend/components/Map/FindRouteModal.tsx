@@ -16,6 +16,7 @@ import axios from 'axios';
 import { MAP_API_KEY } from '../../config/config';
 import AutoComplete from './AutoComplete';
 import FindRouteInput from './FindRouteInput';
+import * as Sentry from "@sentry/react-native";
 
 type FindRouteModalProps = {
   visible: boolean;
@@ -84,6 +85,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
         });
       }
     } catch (error) {
+      Sentry.captureException(error);
       console.error(error);
     }
   };

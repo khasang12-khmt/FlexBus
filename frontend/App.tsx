@@ -4,8 +4,16 @@ import AppNav from "./navigation/AppNav";
 import { useFonts } from "expo-font";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import * as Sentry from "@sentry/react-native";
 
-export default function App() {
+Sentry.init({
+  dsn: "https://234c11ea782f41fb8bd972fb0627f62d@o4505222238896128.ingest.sentry.io/4505222244204544",
+  enableNative: true, // SET THIS TO "FALSE" IF RUN ON DEV MODE
+  integrations: [new Sentry.ReactNativeTracing()],
+  tracesSampleRate: 1.0,
+});
+
+const App = () => {
   const [loaded] = useFonts({
     RobotoRegular: require("./assets/fonts/Roboto-Regular.ttf"),
     RobotoLight: require("./assets/fonts/Roboto-Light.ttf"),
@@ -22,3 +30,5 @@ export default function App() {
     </Provider>
   );
 }
+
+export default Sentry.wrap(App);

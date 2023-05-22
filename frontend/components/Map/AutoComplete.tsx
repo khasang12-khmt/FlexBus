@@ -6,6 +6,7 @@ import _ from "lodash";
 import { StyleSheet } from "react-native";
 import { MAP_API_KEY } from "../../config/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Sentry from "@sentry/react-native";
 
 type Coord = {
   location_name: string | undefined;
@@ -35,7 +36,10 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
     axios
       .get(str)
       .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        Sentry.captureException(err);
+        console.log(err);
+      });
     // Handle response data here
   }, 1000);
 
