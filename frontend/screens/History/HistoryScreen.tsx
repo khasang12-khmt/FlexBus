@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Appbar } from 'react-native-paper';
-import { ScrollView, View, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { TransactionItemProps } from '../../types/TransactionTypes';
+import CustomNavigationHeader from '../../components/CustomNavigationHeader';
+import { UserState } from '../../redux/reducers';
 
 const Data = [
     {
@@ -101,13 +102,14 @@ const TransactionItem = (props: TransactionItemProps) => {
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{props.timestart}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{props.departure}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
-                            <View style={{ width: 32, height: 32, borderRadius: 25, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginHorizontal: 5 }}>
-                            <Ionicons name="bus" size={15} color="#fff" />
-                            </View>
-                            <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
-                        </View>
+                        <Image
+							source={require("../../assets/bus_routes.png")}
+							className="round-lg mb-1"
+							style={{
+								height: 36,
+								width: 100,
+								resizeMode: "contain",
+							}} />
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{props.timeend}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{props.arrival}</Text>
@@ -142,12 +144,7 @@ const HistoryScreen = () => {
 
     return (
         <>
-            <Appbar.Header style={{ elevation, zIndex: 1 }}>
-                <Appbar.Content 
-                    title="Transaction History"
-                    color="#001356"
-                    titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
-            </Appbar.Header>
+            <CustomNavigationHeader name='Transaction History' navigateBackEnable={false} elevation={elevation}/>
             <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
                 <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
                     {Data.length !== 0 ? Data.map((key, index) => 
