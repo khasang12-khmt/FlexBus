@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, StatusBar } from "react-native";
 import uuid from "react-native-uuid";
 import React, {useEffect, useState} from 'react'
-import { GOOGLE_API_KEY } from '../../config/config';
+import { GOOGLE_API_KEY, PRODUCTION } from '../../config/config';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import RouteResultItem from '../../components/Map/RouteResultItem';
@@ -65,14 +65,13 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${fromLocation.latitude},${fromLocation.longitude}&destination=${toLocation.latitude},${toLocation.longitude}&mode=transit&transit_mode=bus&key=${GOOGLE_API_KEY}&alternatives=true`;
     console.log(url);
     // Testing
-    const test = true;
+    const prod = PRODUCTION; // SET THIS TO "FALSE" in config.ts IF RUN ON DEV MODE
 
-    if(test){
+    if (!prod) {
       const routes = routeData.routes;
       parseRoute(routes);
       setIsLoading((load) => false);
-    }
-    else{
+    } else {
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
@@ -91,7 +90,6 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           console.log(err);
         });
     }
-    
   }
 
   const parseRoute = (routes: any) => {
