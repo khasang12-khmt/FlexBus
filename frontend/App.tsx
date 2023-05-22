@@ -8,7 +8,7 @@ import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
   dsn: "https://234c11ea782f41fb8bd972fb0627f62d@o4505222238896128.ingest.sentry.io/4505222244204544",
-  enableNative: true, // SET THIS TO "FALSE" IF RUN ON DEV MODE
+  enableNative: false, // SET THIS TO "FALSE" IF RUN ON DEV MODE
   integrations: [new Sentry.ReactNativeTracing()],
   tracesSampleRate: 1.0,
 });
