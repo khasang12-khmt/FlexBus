@@ -90,11 +90,8 @@ const GetTransactionHistory = async (accessToken: string | null, userId: string)
             headers: {
                 Authorization: `Bearer ${accessToken}`
             },
-            params: {
-                userId: userId
-            }
         };
-        const response = await axios.get('https://be-flexbus-production.up.railway.app/booking/user', config)
+        const response = await axios.get(`https://be-flexbus-production.up.railway.app/booking/user/${userId}`, config)
         console.log(response.data)
         return response.data
     } else return null;
@@ -155,9 +152,9 @@ const HistoryScreen = () => {
     const userId = useSelector(
         (state: RootState) => state.user.id
     );
-    const ListTransactions = GetTransactionHistory(accessToken, userId)
     console.log(accessToken)
     console.log(userId)
+    const ListTransactions = GetTransactionHistory(accessToken, userId)
     const [elevation, setElevation] = useState(0);
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = event.nativeEvent;

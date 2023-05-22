@@ -65,14 +65,12 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
         }),
         onSubmit: async (values) => {
             try {
-				console.log(accessToken)
                 const config = {
 					headers: {
 					  Authorization: `Bearer ${accessToken}`
 					}
 				};
 				const {uuid, ...busStepInfo_nonUUID} = busStepInfo
-				console.log(busStepInfo_nonUUID)
 				const data = {
 					userId: userId,
 					transactionGroup: busStepInfo.uuid,
