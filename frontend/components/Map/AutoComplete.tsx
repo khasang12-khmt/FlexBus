@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import _ from "lodash";
 import { StyleSheet } from "react-native";
+import { MAP_API_KEY } from "../../config/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Sentry from "@sentry/react-native";
 
 type Coord = {
   location_name: string | undefined;
@@ -26,23 +29,25 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [data, setData] = useState<Location[]>()
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const MAP_API_KEY = "pk.9909d2d04fae570df4839a65f0334c28";
+  const [searchQuery, setSearchQuery] = useState<string>(label);
   //Allow 1 API call Per Second
   const getAutoComplete = _.debounce(async (query: string) => {
     let str = `https://api.locationiq.com/v1/autocomplete?key=${MAP_API_KEY}&q=${query}&limit=3&dedupe=1`;
     axios
       .get(str)
       .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        Sentry.captureException(err);
+        console.log(err);
+      });
     // Handle response data here
-  }, 2000);
+  }, 1000);
 
   return (
     <View>
       <Searchbar
-        className="mx-4 mt-4 rounded-xl z-999 bg-white border-sky-100 border"
-        placeholder="Find location"
+        className="mx-4 rounded-xl z-999 bg-white border-sky-100 border"
+        placeholder="Find Location"
         onChangeText={(text: string) => setSearchQuery(text)}
         onKeyPress={() => {
           getAutoComplete(searchQuery);
@@ -73,6 +78,7 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
                   latitude: parseFloat(datum.lat),
                   longitude: parseFloat(datum.lon),
                 });
+                setSearchQuery(datum.display_name);
                 setMenuVisible(false);
               }}
               title={datum.display_name}

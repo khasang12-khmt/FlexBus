@@ -1,29 +1,30 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, StatusBar } from 'react-native'
 import React, { useEffect, useState, useRef } from "react";
-import MapView, { Marker } from "react-native-maps";
-import { Button } from "react-native-paper";
-import CustomHeader from '../../components/CustomHeader'
+import MapView, { Marker, Polyline } from "react-native-maps";
+import { PROVIDER_GOOGLE } from "react-native-maps";
+
+import CustomHeader from '../../components/CustomLogoHeader'
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
 } from "expo-location";
 import AutoComplete from '../../components/Map/AutoComplete';
 import FindRouteModal from '../../components/Map/FindRouteModal';
-
-type Coord = {
-  location_name: string|undefined;
-  latitude: number;
-  longitude: number;
-};
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomLoader from '../../components/CustomLoader';
+import { Coord, CoordName } from '../../types/LocationTypes';
 
 const HomeScreen = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [currentLocation, setCurrentLocation] = useState<Coord>({
+    const navigation = useNavigation();
+    const [currentLocation, setCurrentLocation] = useState<CoordName>({
       location_name: "",
       latitude: 0,
       longitude: 0,
     });
-    const [destination, setDestination] = useState<Coord>({
+    const [destination, setDestination] = useState<CoordName>({
       location_name: "",
       latitude: 0,
       longitude: 0,
@@ -39,15 +40,42 @@ const HomeScreen = () => {
       });
     }
 
+    useEffect(() => {
+      setIsLoading(true);
+      requestLocationPermission();
+      getCurrentLocation();
+    }, []);
+
     useEffect(()=>{
-        if(destination.latitude!=0){
-            onRegionChange()
-        }
+      if(destination.latitude!=0){
+          onRegionChange()
+          saveLocationData(destination,"To")
+      }
     },[destination])
+
+    const saveLocationData = async (locationData:Coord, tag: string) => {
+      try {
+        // Convert the location data to a string
+        const locationDataString = JSON.stringify(locationData);
+
+        // Save the location data to AsyncStorage
+        await AsyncStorage.setItem(tag + "LocationData", locationDataString);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     const getCurrentLocation = async () => {
       const { coords } = await getCurrentPositionAsync({});
       setCurrentLocation({...coords,location_name:""});
+      saveLocationData(coords,"Home")
+      mapRef?.current?.animateToRegion({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      });
     };
     const requestLocationPermission = async () => {
       const { status } = await requestForegroundPermissionsAsync();
@@ -55,20 +83,15 @@ const HomeScreen = () => {
         console.log("Permission to access location was denied");
       }
     };
-    useEffect(() => {
-      requestLocationPermission();
-      getCurrentLocation();
-    }, []);
 
   return (
     <View className="flex flex-1">
       {/* Header */}
       <CustomHeader />
-
+      {isLoading && <CustomLoader />}
       {/* Map + Current Location */}
-      {currentLocation && (
+      {!isLoading && currentLocation && (
         <MapView
-          /* style={modalVisible?{...styles.map,zIndex:5}:styles.map} */
           style={styles.map}
           ref={mapRef}
           initialRegion={{
@@ -76,6 +99,7 @@ const HomeScreen = () => {
             latitudeDelta: 0.001,
             longitudeDelta: 0.001,
           }}
+          provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           showsMyLocationButton={true}
           followsUserLocation={true}
@@ -84,7 +108,7 @@ const HomeScreen = () => {
           zoomEnabled={true}
           pitchEnabled={true}
           rotateEnabled={true}
-          mapPadding={{ top: 80, right: 0, left: 0, bottom: 0 }}
+          mapPadding={{ top: 80, right: 0, left: 0, bottom: 30 }}
         >
           <Marker
             title="You are here"
@@ -104,16 +128,20 @@ const HomeScreen = () => {
           )}
         </MapView>
       )}
-
       {/* Search */}
-      <AutoComplete
-        label="Find Location"
-        onChange={(data) => setDestination(data)}
-      />
-
+      {!isLoading && (
+        <AutoComplete
+          label="Find Location"
+          onChange={(data) => setDestination(data)}
+        />
+      )}
       {/* Find Route Modal */}
-      <View className={`mt-auto ${modalVisible?"h-full":"h-16"}`}>
-        <FindRouteModal visible={modalVisible} setVisible={setModalVisible}/>
+      <View className={`mt-auto ${modalVisible ? "h-full" : "h-16"}`}>
+        <FindRouteModal
+          visible={modalVisible}
+          setVisible={setModalVisible}
+          navigation={navigation}
+        />
       </View>
     </View>
   );

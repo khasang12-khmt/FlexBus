@@ -1,10 +1,14 @@
 import { View, Text, ActivityIndicator } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
+import OnboardingScreen from "../screens/Onboarding/OnboardingScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomLoader from "../components/CustomLoader";
+
 //import { AuthContext } from "../context/AuthContext";
 
 const Stack = createNativeStackNavigator();
@@ -18,20 +22,39 @@ const AppNav = () => {
       </View>
     );
   } */
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [isFirstTimeLoad, setIsFirstTimeLoad] = useState<boolean>(false);
+
+  const checkForFirstTimeLoaded = async () => {
+    const result = await AsyncStorage.getItem("isFirstTimeOpen");
+    if (result == null) setIsFirstTimeLoad(true);
+    setIsLoading(false);
+  };
+  useEffect(() => {
+    checkForFirstTimeLoaded();
+  }, []);
+
   return (
     <NavigationContainer>
       {/* {userToken !== null ? <AppStack /> : <AuthStack />} */}
-      {/* <AuthStack/> */}
-      {/* <AppStack/> */}
+      {isLoading && <CustomLoader />}
       <Stack.Navigator>
-        <Stack.Screen
-          name="AuthStack"
-          component={AuthStack}
-          options={{ headerShown: false }}
-        />
+        {isFirstTimeLoad && (
+          <Stack.Screen
+            name="OnboardingScreen"
+            component={OnboardingScreen}
+            options={{ headerShown: false }}
+          />
+        )}
         <Stack.Screen
           name="AppStack"
           component={AppStack}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AuthStack"
+          component={AuthStack}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

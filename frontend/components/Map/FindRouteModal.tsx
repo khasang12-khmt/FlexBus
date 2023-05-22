@@ -1,5 +1,5 @@
-import { View } from 'react-native'
-import React, { useState } from 'react'
+import { View, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   Portal,
@@ -8,38 +8,86 @@ import {
   Provider,
   TextInput
 } from "react-native-paper";
+import _ from "lodash";
 import { Picker } from "@react-native-picker/picker";
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { MAP_API_KEY } from '../../config/config';
+import AutoComplete from './AutoComplete';
+import FindRouteInput from './FindRouteInput';
+import * as Sentry from "@sentry/react-native";
 
 type FindRouteModalProps = {
-    visible: boolean;
-    setVisible: (arg:boolean)=>void;
-}
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  navigation: NavigationProp<any>;
+};
 
-const genderList = [
-  {
-    label: "Male",
-    value: "male",
-  },
-  {
-    label: "Female",
-    value: "female",
-  },
-  {
-    label: "Others",
-    value: "others",
-  },
-];
+type LocationName = {
+  location_name: string | undefined;
+};
+type Coord = {
+  latitude: number;
+  longitude: number;
+};
+type CoordName = LocationName & Coord;
 
-const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible}) => {
+const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navigation}) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const [fromLocation, setFromLocation] = useState<string>("");
-  const [toLocation, setToLocation] = useState<string>("");
-  const [selectedValue, setSelectedValue] = useState("0");
+  const [limit, setLimit] = useState<string>("999");
+  const [fromLocation, setFromLocation] = useState<CoordName>({
+    location_name: "",
+    latitude: 0,
+    longitude: 0,
+  });
+  const [toLocation, setToLocation] = useState<CoordName>({
+    location_name: "",
+    latitude: 0,
+    longitude: 0,
+  });
+  
+  useEffect(()=>{
+    getLocationData("from","Home");
+    getLocationData("to", "To");
+  },[visible])
 
   const handleFind = () => {
-    console.log(fromLocation,toLocation,selectedValue);
+    navigation.navigate("Route", { fromLocation, toLocation, limit });
+    hideModal();
+  };
+
+  const getLocationData = async (msg: string, tag:string) => {
+    try {
+      // Get the location data from AsyncStorage
+      const locationDataString = await AsyncStorage?.getItem(tag+"LocationData");
+
+      if (!locationDataString) {
+        return null;
+      }
+
+      // Parse the location data string to an object
+      const locationData = JSON.parse(locationDataString);
+      if(msg==="from"){
+        setFromLocation({
+          ...fromLocation,
+          ...locationData,
+          location_name: tag=="Home"?"Current Location":"Recent Location",
+        });
+      }
+      else{
+        setToLocation({
+          ...toLocation,
+          ...locationData,
+          location_name: tag == "Home" ? "Current Location" : "Recent Location",
+        });
+      }
+    } catch (error) {
+      Sentry.captureException(error);
+      console.error(error);
+    }
   };
 
   return (
@@ -51,70 +99,49 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible}) =>
           contentContainerStyle={containerStyle}
         >
           {/* From Input */}
-          <TextInput
-            label="From"
-            mode="flat"
-            value={fromLocation}
-            onChangeText={setFromLocation}
-            selectionColor="#001356"
-            textColor="#001356"
-            left={
-              <TextInput.Icon
-                icon="location-enter"
-                containerColor="white"
-                size={20}
-              />
-            }
-            style={{ backgroundColor: "#fff", marginBottom: 10 }}
-            contentStyle={{ backgroundColor: "#fff" }}
-            underlineStyle={{ borderColor: "#001356", borderRadius: 20 }}
+          <FindRouteInput
+            location={fromLocation}
+            setLocation={setFromLocation}
+            tagLocation="Home"
           />
           {/* To Input */}
-          <TextInput
-            label="To"
-            mode="flat"
-            value={toLocation}
-            onChangeText={setToLocation}
-            selectionColor="#001356"
-            left={
-              <TextInput.Icon
-                icon="location-exit"
-                containerColor="white"
-                size={20}
-              />
-            }
-            textColor="#001356"
-            style={{ backgroundColor: "#fff", marginBottom: 10 }}
-            contentStyle={{ backgroundColor: "#fff" }}
-            underlineStyle={{ borderColor: "#001356" }}
+          <FindRouteInput
+            location={toLocation}
+            setLocation={setToLocation}
+            tagLocation="To"
           />
 
           {/* Maximum Transit */}
-          <View className="w-3/4 rounded-lg">
+          <View className="w-[80%] rounded-[20px] overflow-hidden">
             <Picker
-              style={{ backgroundColor: "white", borderRadius: 50 }}
-              className="mr-2 w-1/2"
+              style={{
+                backgroundColor: "white",
+                height: 45,
+                margin: 0,
+                zIndex: 1,
+              }}
+              className="mr-2 w-1/3 h-1/4 rounded-xl pb-1"
               placeholder="Maximum Transits"
-              selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }
+              selectedValue={limit}
+              onValueChange={(itemValue) => setLimit(itemValue)}
             >
+              <Picker.Item label="Maximum Transits - All" value="999" />
               <Picker.Item label="Maximum Transits - 1" value="1" />
               <Picker.Item label="Maximum Transits - 2" value="2" />
               <Picker.Item label="Maximum Transits - 3" value="3" />
             </Picker>
           </View>
 
-          {/* Transits */}
-          <Button
-            className="mt-auto flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10"
-            onPress={handleFind}
-          >
-            <Text className="text-white" style={{ fontFamily: "RobotoMedium" }}>
-              Find Route
-            </Text>
-          </Button>
+          <TouchableOpacity onPress={handleFind}>
+            <Button className="flex items-center justify-center flex-row mx-auto bg-[#465BA9] mt-3 px-10">
+              <Text
+                className="text-white"
+                style={{ fontFamily: "RobotoMedium", fontSize: 15 }}
+              >
+                Find Route
+              </Text>
+            </Button>
+          </TouchableOpacity>
         </Modal>
       </Portal>
 

@@ -1,12 +1,16 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, StatusBar } from 'react-native'
 import React from 'react'
 
 const CustomHeader = () => {
   return (
-    <View className="bg-[#001356] flex flex-row items-center gap-x-5 p-1 pl-12 max-h-100">
+    <View className="bg-[#001356] flex flex-row items-center gap-x-5 p-1 pl-12 h-[100px] pb-6">
+      <StatusBar
+        backgroundColor="#001356"
+        barStyle="light-content"
+      />
       <Image
         source={require("../assets/icon.png")}
-        className="round-lg mb-1"
+        className="round-lg mb-2"
         style={{
           height: 70,
           width: 70,
