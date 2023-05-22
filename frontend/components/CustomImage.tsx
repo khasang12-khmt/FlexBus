@@ -23,9 +23,6 @@ const CustomImage: React.FC<CustomImageProps> = (props: CustomImageProps) => {
           width: windowWidth,
           height: 300,
           alignSelf: "center",
-          
-
-          // backgroundColor: "#000000",
         }}
       />
     </View>
