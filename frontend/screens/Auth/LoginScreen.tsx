@@ -112,6 +112,8 @@ const LoginScreen = () => {
   };
 
   return (
+    <>
+    <CustomNavigationHeader name="Login" navigateBackEnable={true} />
     <ScrollView
 
     // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -125,9 +127,6 @@ const LoginScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <View>
-              <CustomNavigationHeader name="Login" navigateBackEnable={true} />
-            </View>
             <CustomImage source={imageSource} />
             <View
               className="self-center flex-row flex-wrap"
@@ -171,6 +170,7 @@ const LoginScreen = () => {
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </ScrollView>
+    </>
   );
 };
 

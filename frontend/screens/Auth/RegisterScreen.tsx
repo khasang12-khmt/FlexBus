@@ -108,6 +108,11 @@ const RegisterScreen = () => {
   };
 
   return (
+    <>
+    <CustomNavigationHeader
+      name="Register"
+      navigateBackEnable={true}
+    />
     <ScrollView>
       <SafeAreaView
         className="self-center"
@@ -119,12 +124,6 @@ const RegisterScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <View>
-              <CustomNavigationHeader
-                name="Register"
-                navigateBackEnable={true}
-              />
-            </View>
             <CustomImage source={imageSource} />
             <View className="self-center flex-row flex-wrap">
               <CustomAuthInput
@@ -230,6 +229,7 @@ const RegisterScreen = () => {
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </ScrollView>
+    </>
   );
 };
 
