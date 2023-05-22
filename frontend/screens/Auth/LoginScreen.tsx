@@ -31,6 +31,7 @@ import {
 } from "../../redux/reducers";
 import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native-gesture-handler";
 
 const LoginScreen = () => {
   const windowWidth = 0.85 * useWindowDimensions().width;
@@ -111,13 +112,13 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
+    <ScrollView
       className="flex self-center"
       style={{
         flex: 1,
         width: windowWidth,
       }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <SafeAreaView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -157,16 +158,6 @@ const LoginScreen = () => {
         Login
       </Button> */}
             <CustomButton text="Login" onPress={handleLogin} />
-            <View className="flex-row  items-center ">
-              <View className="flex-1 h-[1] bg-[#757171] self-center" />
-              <Text className="self-center px-2 text-xs text-[#757171]">
-                Or sign in with
-              </Text>
-              <View className="flex-1 h-[1] bg-[#757171] self-center" />
-            </View>
-            <TouchableOpacity className="flex justify-center items-center my-3">
-              <Image source={require("../../assets/Google.png")} />
-            </TouchableOpacity>
             <View className="flex-row justify-center">
               <Text className="text-[#636363]">Not register yet ? </Text>
               <TouchableOpacity onPress={() => navigation.navigate("Register")}>
@@ -176,7 +167,7 @@ const LoginScreen = () => {
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
