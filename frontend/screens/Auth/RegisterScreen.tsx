@@ -26,6 +26,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const RegisterScreen = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const windowWidth = 0.85 * useWindowDimensions().width;
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = async () => {
+    setIsLoading(true)
     if (
       !checkPassword(password, confirmPassword) ||
       !validatePassword(password) ||
@@ -102,6 +104,7 @@ const RegisterScreen = () => {
           console.log(e.message);
         });
     }
+    setIsLoading(false)
   };
 
   return (
@@ -116,7 +119,7 @@ const RegisterScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <View className="mt-[-28px]">
+            <View>
               <CustomNavigationHeader
                 name="Register"
                 navigateBackEnable={true}
@@ -215,7 +218,7 @@ const RegisterScreen = () => {
                   </View>
                 )}
             </View>
-            <CustomButton text="Register" onPress={handleRegister} />
+            <CustomButton text="Register" onPress={handleRegister} loading={isLoading}/>
 
             <View className="flex-row justify-center mb-10">
               <Text className="text-[#636363]">Join us before ? </Text>

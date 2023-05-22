@@ -34,6 +34,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 
 const LoginScreen = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const windowWidth = 0.85 * useWindowDimensions().width;
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const LoginScreen = () => {
   };
 
   const handleLogin = async () => {
+    setIsLoading(true);
     if (!validateEmail(email)) {
       const title = "Invalid Email";
       const message =
@@ -74,10 +76,7 @@ const LoginScreen = () => {
           if (response.data.code === 200) {
             const data = response.data.data;
             await AsyncStorage.setItem("access_token", data.accessToken);
-            // console.log(1, data.accessToken);
-            // console.log(1, data.id);
             dispatch(setUserEmail(email));
-            // console.log(email);
             dispatch(setUserId(data.id));
             dispatch(setAccessTokenStore(data.accessToken));
 
@@ -109,26 +108,29 @@ const LoginScreen = () => {
           console.log(e.message);
         });
     }
+    setIsLoading;
   };
 
   return (
     <ScrollView
-      className="flex self-center"
-      style={{
-        flex: 1,
-        width: windowWidth,
-      }}
-      // behavior={Platform.OS === "ios" ? "padding" : "height"}
+
+    // behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <SafeAreaView>
+      <SafeAreaView
+        className="self-center"
+        style={{
+          flex: 1,
+          width: windowWidth,
+        }}
+      >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <View className="mt-[-28px]">
+            <View>
               <CustomNavigationHeader name="Login" navigateBackEnable={true} />
             </View>
             <CustomImage source={imageSource} />
             <View
-              className="flex flex-row flex-wrap"
+              className="self-center flex-row flex-wrap"
               style={{ width: windowWidth }}
             >
               <CustomAuthInput
@@ -144,7 +146,7 @@ const LoginScreen = () => {
                 isSecure={true}
               />
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               className="flex-row-reverse"
               onPress={() => {
                 navigation.navigate("ForgotPassword");
@@ -153,11 +155,12 @@ const LoginScreen = () => {
               <Text className="text-[#4658A9] font-bold">
                 Forgot password ?
               </Text>
-            </TouchableOpacity>
-            {/* <Button className="" mode="contained" onPress={handleLogin}>
-        Login
-      </Button> */}
-            <CustomButton text="Login" onPress={handleLogin} />
+            </TouchableOpacity> */}
+            <CustomButton
+              text="Login"
+              onPress={handleLogin}
+              loading={isLoading}
+            />
             <View className="flex-row justify-center">
               <Text className="text-[#636363]">Not register yet ? </Text>
               <TouchableOpacity onPress={() => navigation.navigate("Register")}>
