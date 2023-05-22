@@ -11,6 +11,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import axios from 'axios';
 import { BusDetail, Facility, Schedule } from '../../types/BusDetailTypes';
 import BusSchedule from './BusSchedule';
+import * as Sentry from "@sentry/react-native";
 
 type BusDetailInfoProps = {
     info: BusStep
@@ -21,8 +22,8 @@ const BusDetailInfo: React.FC<BusDetailInfoProps> = ({info}) => {
   const [busDetail, setBusDetail] = useState<BusDetail>();
   const getBusDetail = () => {
     axios.get(`https://be-flexbus-production.up.railway.app/bus/${info.bus_no}`)
-        .then((res)=>setBusDetail(res.data.data[0]))
-        .catch((err)=>console.log(err))
+        .then((res)=>{Sentry.captureMessage("Success");setBusDetail(res.data.data[0])})
+        .catch((err)=>{Sentry.captureException(err);console.log(err)})
   }
   const getDate = ()=>{
     const currentDate = new Date();

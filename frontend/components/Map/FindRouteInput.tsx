@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import _ from "lodash";
 import { MAP_API_KEY } from '../../config/config';
+import * as Sentry from "@sentry/react-native";
 
 type Location = {
   display_name: string;
@@ -30,8 +31,19 @@ const FindRouteInput: React.FC<FindRouteInputProps> = ({
       let str = `https://api.locationiq.com/v1/autocomplete?key=${MAP_API_KEY}&q=${query}&limit=3&dedupe=1`;
       axios
         .get(str)
-        .then((res) => setData(res.data.map((item:any)=>({...item,latitude:item.lat,longitude:item.lon}))))
-        .catch((err) => console.log(err));
+        .then((res) =>
+          setData(
+            res.data.map((item: any) => ({
+              ...item,
+              latitude: item.lat,
+              longitude: item.lon,
+            }))
+          )
+        )
+        .catch((err) => {
+          Sentry.captureException(err);
+          console.log(err);
+        });
       // Handle response data here
     }, 1500);
     const getIcon = () => {
@@ -61,9 +73,7 @@ const FindRouteInput: React.FC<FindRouteInputProps> = ({
         location_name:
           tagLocation == "Home" ? "Current Location" : "Recent Location",
       });
-    } catch (error) {
-      console.error(error);
-    }
+    } catch{(err)=>{Sentry.captureException(err);console.log(err)}}
   };
 
   return (
