@@ -103,14 +103,15 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 					  Authorization: `Bearer ${accessToken}`
 					}
 				};
-				const {uuid, ...busStepInfo_nonUUID} = busStepInfo
+				const {uuid, price, ...busStepInfo_updated} = busStepInfo
 				const data = {
 					userId: userId,
 					transactionGroup: busStepInfo.uuid,
-					busInfo: busStepInfo_nonUUID,
+					busInfo: busStepInfo_updated,
 					payment: {
 						'class': isStudent ? 'Student' : 'Economy',
 						'method': 'Credit card',
+						'price': isStudent ? '3000' : price,
 						...values
 					}
 				}
