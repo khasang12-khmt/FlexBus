@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ScrollView, View, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useIsFocused } from '@react-navigation/native';
 import { TransactionItemProps } from '../../types/TransactionTypes';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import { useSelector } from 'react-redux';
@@ -77,6 +77,7 @@ const TransactionItem = (props: TransactionItemProps) => {
 }
 
 const HistoryScreen = () => {
+    const isFocused = useIsFocused();
     const accessToken = useSelector(
         (state: RootState) => state.user.accessTokenStore
     );
@@ -88,15 +89,16 @@ const HistoryScreen = () => {
         const fetchTransactions = async () => {
             try {
                 const result = await GetTransactionHistory(accessToken, userId);
-                setTransactions(result);
+                const reversedResult = [...result].reverse();
+                setTransactions(reversedResult);
             } catch (error) {
                 console.error(error);
             }
         };
         if (accessToken) {
-          fetchTransactions();
+            fetchTransactions();
         }
-    }, []);
+    }, [isFocused]);
     const [elevation, setElevation] = useState(0);
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = event.nativeEvent;
@@ -107,70 +109,56 @@ const HistoryScreen = () => {
         }
     };
 
-    return accessToken ? (
-      <>
-        <CustomNavigationHeader
-          name="Transaction History"
-          navigateBackEnable={false}
-          elevation={elevation}
-        />
-        <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-          <View
-            style={{
-              margin: 15,
-              backgroundColor: "#fff",
-              borderRadius: 18,
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 16,
-            }}
-          >
-            {transactions && transactions.length !== 0 ? (
-              transactions.map((transactionGroup, arrayIndex) => {
-                return (
-                  <React.Fragment key={arrayIndex}>
-                    {transactionGroup.map((item: any, itemIndex: number) => {
-                      return (
-                        <React.Fragment key={itemIndex}>
-                          <TransactionItem
-                            bus_no={item.busInfo.bus_no}
-                            timestamp={item.createdAt}
-                            timestart={item.busInfo.timestart}
-                            departure={item.busInfo.departure}
-                            timeend={item.busInfo.timeend}
-                            arrival={item.busInfo.arrival}
-                            class="Economy"
-                            price={item.busInfo.price}
-                            code={item.payment.transactionCode}
-                            payment-method={item.payment.method}
-                          />
-                        </React.Fragment>
-                      );
-                    })}
-                    {transactions && arrayIndex !== transactions.length - 1 && (
-                      <View
-                        style={{
-                          width: 250,
-                          height: 0.5,
-                          backgroundColor: "#767680",
-                          marginBottom: 15,
-                        }}
-                      ></View>
-                    )}
-                  </React.Fragment>
-                );
-              })
-            ) : (
-              <Text style={{ fontFamily: "RobotoRegular", fontSize: 16 }}>
-                There is no transaction
-              </Text>
-            )}
-          </View>
-        </ScrollView>
-      </>
-    ) : (
-      <NotLoggedScreen />
-    );
+    return (
+        accessToken ?
+        <>
+            <CustomNavigationHeader name='Transaction History' navigateBackEnable={false} elevation={elevation}/>
+            <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+                <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
+                    {transactions.length !== 0 ? 
+                    (
+                        transactions.map((transactionGroup, arrayIndex) => {
+                            return (
+                                <React.Fragment key={arrayIndex}>
+                                {transactionGroup.map((item: any, itemIndex: number) => {
+                                    return (
+                                        <React.Fragment key={itemIndex}>
+                                            <TransactionItem
+                                                bus_no={item.busInfo.bus_no}
+                                                timestamp={item.createdAt}
+                                                timestart={item.busInfo.timestart}
+                                                departure={item.busInfo.departure}
+                                                timeend={item.busInfo.timeend}
+                                                arrival={item.busInfo.arrival}
+                                                class={item.payment.class}
+                                                price={item.busInfo.price}
+                                                code={item.payment.transactionCode}
+                                                payment-method={item.payment.method}
+                                            />
+                                        </React.Fragment>
+                                    );
+                                })}
+                                {arrayIndex !== transactions.length - 1 && (
+                                    <View
+                                        style={{
+                                            width: 250,
+                                            height: 0.5,
+                                            backgroundColor: '#767680',
+                                            marginBottom: 15,
+                                        }}>
+                                    </View>
+                                )}
+                                </React.Fragment>
+                            );
+                        })
+                    )
+                    : <Text style={{fontFamily:'RobotoRegular' ,fontSize: 16}}>There is no transaction</Text>
+                    }
+                </View>
+            </ScrollView>
+        </> :
+        <NotLoggedScreen/>
+    )
 }
 
 export default HistoryScreen

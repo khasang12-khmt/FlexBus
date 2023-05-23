@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScrollView, View, NativeSyntheticEvent, NativeScrollEvent, Text, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TextInput, Button, HelperText } from 'react-native-paper';
@@ -30,6 +30,18 @@ type RootStackParamList = {
 	Success: undefined;
 };
 
+const CheckStudent = async (accessToken: string, userId: string) => {
+	if (accessToken) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            },
+        };
+        const response = await axios.get(`https://be-flexbus-production.up.railway.app/user/${userId}`, config)
+		return response.data.data.student_no ? true : false
+    } else return false;
+}
+
 type PaymentStackScreenNavigationProp = NativeStackScreenProps<RootStackParamList, "Payment">;
 
 const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, route}) => {
@@ -39,6 +51,20 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
     const userId = useSelector(
         (state: RootState) => state.user.id
     );
+	const [isStudent, setIsStudent] = useState(false);
+	useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const result = await CheckStudent(accessToken, userId);
+                setIsStudent(result);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        if (accessToken) {
+			fetchUser();
+        }
+    }, []);
 	const busStepInfo = route.params;
 	const currentYear = new Date().getFullYear().toString().slice(-2);
 	const formik = useFormik({
@@ -83,11 +109,11 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 					transactionGroup: busStepInfo.uuid,
 					busInfo: busStepInfo_nonUUID,
 					payment: {
+						'class': isStudent ? 'Student' : 'Economy',
 						'method': 'Credit card',
 						...values
 					}
 				}
-				console.log(data)
 				await axios.post('https://be-flexbus-production.up.railway.app/booking', data, config);
 				navigation.navigate('Success');
             } catch (error) {
@@ -199,9 +225,9 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 								justifyContent: "space-between",
 								marginBottom: 20,
 							}}>
-							<Text style={{ fontSize: 20, fontWeight: "bold" }}>Total</Text>
+							<Text style={{ fontSize: 20, fontWeight: "bold" }}>Price ({isStudent ? 'Student' : 'Economy'})</Text>
 							<Text style={{ fontSize: 20, fontWeight: "bold" }}>
-								{busStepInfo.price} VND
+								{isStudent ? '3000' : busStepInfo.price} VND
 							</Text>
 						</View>
 
@@ -278,6 +304,7 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 									<TextInput
 										mode="outlined"
 										label="CVV"
+										maxLength={3}
 										value={formik.values.cvv}
 										outlineColor="#001356"
 										activeOutlineColor="#001356"

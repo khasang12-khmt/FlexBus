@@ -196,7 +196,6 @@ const ProfileScreen = () => {
     const value = await AsyncStorage.getItem("access_token");
     dispatch(setAccessTokenStore(value));
     if (accessToken !== null) {
-      console.log("Access Token", accessToken);
       await getInfo();
     }
     setUsernameLabel(username);
