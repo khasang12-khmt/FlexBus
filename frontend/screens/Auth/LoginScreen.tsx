@@ -76,6 +76,7 @@ const LoginScreen = () => {
           if (response.data.code === 200) {
             const data = response.data.data;
             await AsyncStorage.setItem("access_token", data.accessToken);
+            await AsyncStorage.setItem("user_id", data.id)
             dispatch(setUserEmail(email));
             dispatch(setUserId(data.id));
             dispatch(setAccessTokenStore(data.accessToken));

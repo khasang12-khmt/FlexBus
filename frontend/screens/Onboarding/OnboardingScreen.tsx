@@ -96,7 +96,7 @@ const OnboardingScreen = () => {
           backgroundColor: "#FFFFFF",
           image: (
             <Image
-              source={require("../../assets/Onboarding1.png")}
+              source={require("../../assets/Onboarding1.gif")}
               className="w-10/12"
               style={{
                 resizeMode: "contain",
@@ -111,7 +111,7 @@ const OnboardingScreen = () => {
           backgroundColor: "#FFFFFF",
           image: (
             <Image
-              source={require("../../assets/Onboarding2.png")}
+              source={require("../../assets/Onboarding2.gif")}
               className="w-10/12"
               style={{
                 resizeMode: "contain",
@@ -126,7 +126,7 @@ const OnboardingScreen = () => {
           backgroundColor: "#FFFFFF",
           image: (
             <Image
-              source={require("../../assets/Onboarding3.png")}
+              source={require("../../assets/Onboarding3.gif")}
               className="w-10/12"
               style={{
                 resizeMode: "contain",
