@@ -114,6 +114,11 @@ const LoginScreen = () => {
   return (
     <>
     <CustomNavigationHeader name="Login" navigateBackEnable={true} />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}
+    >
     <ScrollView
 
     // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -170,6 +175,7 @@ const LoginScreen = () => {
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </ScrollView>
+    </KeyboardAvoidingView>
     </>
   );
 };
