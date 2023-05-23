@@ -109,7 +109,7 @@ const LoginScreen = () => {
           console.log(e.message);
         });
     }
-    setIsLoading;
+    setIsLoading(false);
   };
 
   return (
