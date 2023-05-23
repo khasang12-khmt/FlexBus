@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, StatusBar } from "react-native";
 import uuid from "react-native-uuid";
 import React, {useEffect, useState} from 'react'
-import { GOOGLE_API_KEY } from '../../config/config';
+import { GOOGLE_API_KEY, PRODUCTION } from '../../config/config';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import RouteResultItem from '../../components/Map/RouteResultItem';
@@ -65,14 +65,13 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${fromLocation.latitude},${fromLocation.longitude}&destination=${toLocation.latitude},${toLocation.longitude}&mode=transit&transit_mode=bus&key=${GOOGLE_API_KEY}&alternatives=true`;
     console.log(url);
     // Testing
-    const test = true;
+    const prod = PRODUCTION; // SET THIS TO "FALSE" in config.ts IF RUN ON DEV MODE
 
-    if(test){
+    if (!prod) {
       const routes = routeData.routes;
       parseRoute(routes);
       setIsLoading((load) => false);
-    }
-    else{
+    } else {
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
@@ -91,7 +90,6 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           console.log(err);
         });
     }
-    
   }
 
   const parseRoute = (routes: any) => {
@@ -208,17 +206,18 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
       {isLoading ? (
         <CustomLoader />
       ) : (
-        <ScrollView className="flex flex-1">
+        <ScrollView className="flex flex-1 flex-col" contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
           {routes.length == 0 && (
             <View
               style={{
                 flex: 1,
+                flexDirection: 'column',
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "auto",
+                marginTop: 100
               }}
             >
-              <Icon name="error-outline" size={50} color="#888" />
+              <Icon name="error-outline" size={80} color="#888" />
               <Title>Oops!</Title>
               <Subheading>No bus routes found.</Subheading>
             </View>
