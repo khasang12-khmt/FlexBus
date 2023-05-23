@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ScrollView, View, Text, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useIsFocused } from '@react-navigation/native';
 import { TransactionItemProps } from '../../types/TransactionTypes';
 import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 import { useSelector } from 'react-redux';
@@ -77,6 +77,7 @@ const TransactionItem = (props: TransactionItemProps) => {
 }
 
 const HistoryScreen = () => {
+    const isFocused = useIsFocused();
     const accessToken = useSelector(
         (state: RootState) => state.user.accessTokenStore
     );
@@ -88,15 +89,16 @@ const HistoryScreen = () => {
         const fetchTransactions = async () => {
             try {
                 const result = await GetTransactionHistory(accessToken, userId);
-                setTransactions(result);
+                const reversedResult = [...result].reverse();
+                setTransactions(reversedResult);
             } catch (error) {
                 console.error(error);
             }
         };
         if (accessToken) {
-          fetchTransactions();
+            fetchTransactions();
         }
-    }, []);
+    }, [isFocused]);
     const [elevation, setElevation] = useState(0);
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = event.nativeEvent;
@@ -128,7 +130,7 @@ const HistoryScreen = () => {
                                                 departure={item.busInfo.departure}
                                                 timeend={item.busInfo.timeend}
                                                 arrival={item.busInfo.arrival}
-                                                class='Economy'
+                                                class={item.payment.class}
                                                 price={item.busInfo.price}
                                                 code={item.payment.transactionCode}
                                                 payment-method={item.payment.method}
