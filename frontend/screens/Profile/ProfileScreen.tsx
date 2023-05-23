@@ -144,7 +144,9 @@ const ProfileScreen = () => {
           Alert.alert("Update Successfully", "", [
             {
               text: "OK",
-              onPress: () => {},
+              onPress: () => {
+                setUsernameLabel(username);
+              },
             },
           ]);
         }
@@ -152,8 +154,6 @@ const ProfileScreen = () => {
       .catch((e: AxiosError) => {
         console.log("Handle update:", e.message);
       });
-
-    setUsernameLabel(username);
   };
 
   const handleDelete = async () => {
@@ -198,17 +198,20 @@ const ProfileScreen = () => {
     if (accessToken !== null) {
       await getInfo();
     }
-    setUsernameLabel(username);
     setIsLoading(false);
   };
 
   const getInfo = async () => {
+    const userIdAsyncStorage = await AsyncStorage.getItem("user_id");
     await axios
-      .get(`https://be-flexbus-production.up.railway.app/user/${userId}`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
+      .get(
+        `https://be-flexbus-production.up.railway.app/user/${userIdAsyncStorage}`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      )
       .then((response) => {
         const data = response.data.data;
         setUsername(data.name);
@@ -216,7 +219,7 @@ const ProfileScreen = () => {
         setGender(data.gender);
         setInputDate(new Date(data.birthDay));
         setEmail(data.email);
-        setUsernameLabel(username);
+        setUsernameLabel(data.name);
         setStudentID(data.student_no);
       })
       .catch((e: AxiosError) => {
@@ -335,10 +338,10 @@ const ProfileScreen = () => {
                     }}
                     dropDownStyle={{
                       backgroundColor: "#DDE1FF",
-                      borderRadius: 12
+                      borderRadius: 12,
                     }}
                     dropDownItemStyle={{
-                      backgroundColor: "#DDE1FF"
+                      backgroundColor: "#DDE1FF",
                     }}
                     dropDownItemSelectedStyle={{
                       backgroundColor: "#001356",
@@ -404,9 +407,6 @@ const ProfileScreen = () => {
                 />
               </View>
               <View className="flex justify-center items-center">
-                {/* <Button mode="text" textColor="#BA1A1A" onPress={() => {}}>
-            Delete Account
-          </Button> */}
                 <TouchableOpacity onPress={handleDelete}>
                   <Text className="text-[#BA1A1A] font-bold my-3 text-base">
                     Delete Account
