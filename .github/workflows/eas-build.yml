@@ -25,5 +25,5 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - name: Install dependencies
         run: npm ci
-      - name: Build on EAS
+      - name: Build on EAS Android
         run: eas build -p android --profile preview --non-interactive

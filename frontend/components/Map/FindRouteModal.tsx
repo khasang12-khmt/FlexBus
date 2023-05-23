@@ -56,6 +56,7 @@ const FindRouteModal : React.FC<FindRouteModalProps> = ({visible,setVisible,navi
 
   const handleFind = () => {
     navigation.navigate("Route", { fromLocation, toLocation, limit });
+    console.log(fromLocation,toLocation);
     hideModal();
   };
 

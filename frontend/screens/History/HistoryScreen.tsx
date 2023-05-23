@@ -25,55 +25,146 @@ const GetTransactionHistory = async (accessToken: string | null, userId: string)
 
 const TransactionItem = (props: TransactionItemProps) => {
     const navigation: NavigationProp<any> = useNavigation();
+    const date = new Date(props.timestamp).toDateString();
+    const time = new Date(props.timestamp).toTimeString();
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('Detail', props)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
-            <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: '#fff', fontSize: 24 }}>{props.bus_no}</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Detail", props)}
+        style={{ flexDirection: "row", alignItems: "center", marginBottom: 15 }}
+      >
+        <View
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 25,
+            backgroundColor: "#001356",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "#fff", fontSize: 24 }}>{props.bus_no}</Text>
+        </View>
+        <View style={{ marginLeft: 10, flexDirection: "column", flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "#C6FFF3",
+                padding: 5,
+                borderRadius: 8,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Ionicons name="ios-checkmark-circle" size={12} color="#006B5E" />
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "#006B5E",
+                  marginLeft: 2,
+                  fontSize: 11,
+                }}
+              >
+                Payment completed
+              </Text>
             </View>
-            <View style={{ marginLeft: 10, flexDirection: 'column', flex: 1 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <View style={{backgroundColor: '#C6FFF3', padding: 5, borderRadius: 8, flexDirection: 'row', alignItems: 'center'}}>
-                        <Ionicons name="ios-checkmark-circle" size={12} color="#006B5E" />
-                        <Text style={{fontWeight: 'bold', color: '#006B5E', marginLeft: 2, fontSize: 11}}>Payment completed</Text>
-                    </View>
-                    <Text style={{fontWeight: 'bold', color: '#767680', fontSize: 10}}>{props.timestamp}</Text>
-                </View>
-
-                {/* From - To */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 5 }}>
-                    <View style={{ flex: 1, justifyContent: 'center' }}>
-                        {/* Timestart */}
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{props.timestart}</Text> 
-                        <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{props.departure}</Text>
-                    </View>
-                    <Image
-                        source={require("../../assets/bus_routes.png")}
-                        className="round-lg mb-1"
-                        style={{
-                            height: 36,
-                            width: 100,
-                            resizeMode: "contain",
-                            marginHorizontal: 5
-                        }} />
-                    <View style={{ flex: 1, justifyContent: 'center' }}>
-                        {/* Timeend */}
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{props.timeend}</Text>
-                        <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{props.arrival}</Text>
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 3 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}> 
-                        <Ionicons name="bus" size={12} color="#767680" />
-                        <Text style={{ fontSize: 12, color: '#767680', marginLeft: 5}}>{props.class}</Text>
-                    </View>
-                    <View>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold'}}>{props.price} VND</Text>
-                    </View>
-                </View>
+            <View>
+              <Text
+                style={{ fontWeight: "bold", color: "#767680", fontSize: 10 }}
+              >
+                {date}
+              </Text>
+              <Text
+                style={{ fontWeight: "bold", color: "#767680", fontSize: 10 }}
+              >
+                {time}
+              </Text>
             </View>
-        </TouchableOpacity>
-    )
+          </View>
+
+          {/* From - To */}
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginVertical: 5,
+            }}
+          >
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              {/* Timestart */}
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                {props.timestart}
+              </Text>
+              <Text
+                style={{ fontSize: 12, color: "#767680", textAlign: "center" }}
+              >
+                {props.departure}
+              </Text>
+            </View>
+            <Image
+              source={require("../../assets/bus_routes.png")}
+              className="round-lg mb-1"
+              style={{
+                height: 36,
+                width: 100,
+                resizeMode: "contain",
+                marginHorizontal: 5,
+              }}
+            />
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              {/* Timeend */}
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                {props.timeend}
+              </Text>
+              <Text
+                style={{ fontSize: 12, color: "#767680", textAlign: "center" }}
+              >
+                {props.arrival}
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: 3,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="bus" size={12} color="#767680" />
+              <Text style={{ fontSize: 12, color: "#767680", marginLeft: 5 }}>
+                {props.class==undefined ? "Economy":props.class}
+              </Text>
+            </View>
+            <View>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                {props.price} VND
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
 }
 
 const HistoryScreen = () => {

@@ -263,7 +263,7 @@ const ProfileScreen = () => {
           {isLoading && <CustomLoader />}
           {!isLoading && accessToken === null && <NotLoggedScreen />}
           {!isLoading && accessToken !== null && (
-            <View className="flex-1 self-center" style={{ width: windowWidth }}>
+            <View className="flex-1 self-center mt-2" style={{ width: windowWidth }}>
               <TouchableOpacity
                 className="flex-row-reverse mb-5 mx-3"
                 onPress={() => {
