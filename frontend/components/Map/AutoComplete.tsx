@@ -29,7 +29,7 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [data, setData] = useState<Location[]>()
-  const [searchQuery, setSearchQuery] = useState<string>(label);
+  const [searchQuery, setSearchQuery] = useState<string>();
   //Allow 1 API call Per Second
   const getAutoComplete = _.debounce(async (query: string) => {
     let str = `https://api.locationiq.com/v1/autocomplete?key=${MAP_API_KEY}&q=${query}&limit=3&dedupe=1`;

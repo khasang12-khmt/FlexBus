@@ -158,7 +158,7 @@ const HistoryScreen = () => {
             </ScrollView>
         </> :
         <NotLoggedScreen/>
-  )
+    )
 }
 
 export default HistoryScreen

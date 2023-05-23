@@ -76,7 +76,7 @@ const ProfileScreen = () => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    if (type == "org.iso.Code128") {
+    if (type == "org.iso.Code128" || type == "1") {
       setStudentID(data);
       Alert.alert(`Scan Successfully`, `Student ID: ${data}`, [
         {

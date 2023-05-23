@@ -11,7 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#101414"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "updates": {
+      "fallbackToCacheTimeout": 60000
+    },
     "ios": {
       "supportsTablet": true
     },
