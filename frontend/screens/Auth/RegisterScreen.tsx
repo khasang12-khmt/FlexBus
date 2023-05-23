@@ -113,6 +113,11 @@ const RegisterScreen = () => {
       name="Register"
       navigateBackEnable={true}
     />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}
+    >
     <ScrollView>
       <SafeAreaView
         className="self-center"
@@ -229,6 +234,7 @@ const RegisterScreen = () => {
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </ScrollView>
+    </KeyboardAvoidingView>
     </>
   );
 };
