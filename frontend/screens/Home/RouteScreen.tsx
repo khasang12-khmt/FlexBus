@@ -206,17 +206,18 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
       {isLoading ? (
         <CustomLoader />
       ) : (
-        <ScrollView className="flex flex-1">
+        <ScrollView className="flex flex-1 flex-col" contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
           {routes.length == 0 && (
             <View
               style={{
                 flex: 1,
+                flexDirection: 'column',
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "auto",
+                marginTop: 100
               }}
             >
-              <Icon name="error-outline" size={50} color="#888" />
+              <Icon name="error-outline" size={80} color="#888" />
               <Title>Oops!</Title>
               <Subheading>No bus routes found.</Subheading>
             </View>

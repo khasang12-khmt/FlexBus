@@ -1,38 +1,30 @@
-import { View, Text, Image } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { Appbar } from 'react-native-paper';
 
 type HeaderProps = {
     name: string
-    navigateBackEnable: boolean
+    navigateBackEnable: boolean,
+    elevation?: number
 }
-const CustomNavigationHeader: React.FC<HeaderProps> = ({name,navigateBackEnable}) => {
+const CustomNavigationHeader: React.FC<HeaderProps> = ({ name, navigateBackEnable, elevation }) => {
     const navigation = useNavigation();
   return (
-    <View className="flex flex-row pt-4 pb-4 justify-between items-center mt-7">
-      {navigateBackEnable && (
-        <TouchableOpacity className="ml-6">
-          <MaterialIcons
-            name="arrow-back-ios"
-            size={25}
-            onPress={() => navigation.goBack()}
-          />
-        </TouchableOpacity>
-      )}
-
-      <Text
-        style={{
-          marginRight: 40,
-          fontSize: 22,
-          fontFamily: "RobotoRegular",
-        }}
-      >
-        {name}
-      </Text>
-      <View></View>
-    </View>
+      <Appbar.Header style={{ elevation, zIndex: 1 }}>
+				{navigateBackEnable && <Appbar.BackAction
+					color="#001356"
+					onPress={() => navigation.goBack()}
+				/>}
+				<Appbar.Content
+					title={name}
+					color="#001356"
+					titleStyle={{
+						fontFamily: "RobotoRegular",
+						fontSize: 22,
+						lineHeight: 28,
+					}}
+				/>
+			</Appbar.Header>
   );
 };
 

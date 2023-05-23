@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Appbar, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
-import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal } from 'react-native';
+import { ScrollView, View, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, Modal, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
 import { TransactionItemProps } from '../../types/TransactionTypes';
+import CustomNavigationHeader from '../../components/CustomNavigationHeader';
 
 const DetailScreen = () => {
     const route = useRoute();
@@ -28,14 +29,11 @@ const DetailScreen = () => {
     };
     return (
         <>
-            <Appbar.Header style={{ elevation, zIndex: 1 }}>
-                <Appbar.BackAction color="#001356" onPress={() => navigation.goBack()} />
-                <Appbar.Content title="Transaction Detail" color="#001356" titleStyle={{ fontFamily: 'RobotoRegular', fontSize: 22, lineHeight: 28}} />
-            </Appbar.Header>
+            <CustomNavigationHeader name='Transaction Detail' navigateBackEnable={true} elevation={elevation}/>
             <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
                 <View style={{ margin: 15, backgroundColor: '#fff', borderRadius: 18, alignItems: 'center', justifyContent: 'center', padding: 15 }}>
                     <Modal visible={showModal} transparent={true}>
-                        <View style={{ flex: 1, alignItems: 'center', position: 'relative', top: '80%' }}>
+                        <View style={{ flex: 1, alignItems: 'center', position: 'relative', top: '70%' }}>
                             <View style={{
                                     borderRadius: 18,
                                     borderColor:'black',
@@ -50,31 +48,33 @@ const DetailScreen = () => {
                             </View>
                         </View>
                     </Modal>
-                    <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginBottom: 15 }}>
                         <Text style={{ color: '#fff', fontSize: 45 }}>{item.bus_no}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 20 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{item.timestart}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{item.departure}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
-                            <View style={{ width: 32, height: 32, borderRadius: 25, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginHorizontal: 5 }}>
-                            <Ionicons name="bus" size={15} color="#fff" />
-                            </View>
-                            <View style={{ width: 45, height: 1, backgroundColor: '#767680'}}></View>
-                        </View>
+                        <Image
+							source={require("../../assets/bus_routes.png")}
+							className="round-lg mb-1"
+							style={{
+								height: 36,
+								width: 100,
+								resizeMode: "contain",
+                                marginHorizontal: 5
+							}} />
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{item.timeend}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{item.arrival}</Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15}}> 
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5}}> 
                         <Ionicons name="bus" size={12} color="#767680" />
                         <Text style={{ fontSize: 12, color: '#767680', marginLeft: 5}}>{item.class}</Text>
                     </View>
-                    <View style={{ marginBottom: 15 }}>
+                    <View style={{ marginBottom: 5 }}>
                         <Text style={{ fontSize: 30, fontWeight: 'bold'}}>{item.price} VND</Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
@@ -90,19 +90,19 @@ const DetailScreen = () => {
                             <Text style={{fontWeight: 'bold', color: '#767680', fontSize: 12}}>{item.timestamp}</Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
-                        <Text>Transaction code</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={{fontWeight: 'bold', fontSize: 16}}>{item.code}</Text>
-                            <TouchableOpacity onPress={handleCopyCode} style={{marginLeft: 5}}>
-                                <Ionicons name="copy-outline" size={16} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 15}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 10}}>
                         <Text>Payment method</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>    
                             <Text style={{marginRight: 3}}>{item['payment-method']}</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: 250, marginBottom: 5}}>
+                        <Text style={{ marginBottom: 2 }}>Transaction code</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 12}}>{item.code}</Text>
+                            <TouchableOpacity onPress={handleCopyCode} style={{marginLeft: 5}}>
+                                <Ionicons name="copy-outline" size={16} />
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
@@ -122,7 +122,7 @@ const DetailScreen = () => {
                 </View>
             </ScrollView>
         </>
-  )
+    )
 }
 
 export default DetailScreen

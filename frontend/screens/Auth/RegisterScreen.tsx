@@ -26,6 +26,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const RegisterScreen = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const windowWidth = 0.85 * useWindowDimensions().width;
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = async () => {
+    setIsLoading(true)
     if (
       !checkPassword(password, confirmPassword) ||
       !validatePassword(password) ||
@@ -102,11 +104,22 @@ const RegisterScreen = () => {
           console.log(e.message);
         });
     }
+    setIsLoading(false)
   };
 
   return (
+    <>
+    <CustomNavigationHeader
+      name="Register"
+      navigateBackEnable={true}
+    />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}
+    >
     <ScrollView>
-      <View
+      <SafeAreaView
         className="self-center"
         // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -116,12 +129,6 @@ const RegisterScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <View className="mt-[-28px]">
-              <CustomNavigationHeader
-                name="Register"
-                navigateBackEnable={true}
-              />
-            </View>
             <CustomImage source={imageSource} />
             <View className="self-center flex-row flex-wrap">
               <CustomAuthInput
@@ -215,18 +222,8 @@ const RegisterScreen = () => {
                   </View>
                 )}
             </View>
-            <CustomButton text="Register" onPress={handleRegister} />
+            <CustomButton text="Register" onPress={handleRegister} loading={isLoading}/>
 
-            <View className="flex-row  items-center ">
-              <View className="flex-1 h-[1] bg-[#757171] self-center" />
-              <Text className="self-center px-2 text-xs text-[#757171]">
-                Or sign in with
-              </Text>
-              <View className="flex-1 h-[1] bg-[#757171] self-center" />
-            </View>
-            <TouchableOpacity className="flex justify-center items-center my-3">
-              <Image source={require("../../assets/Google.png")} />
-            </TouchableOpacity>
             <View className="flex-row justify-center mb-10">
               <Text className="text-[#636363]">Join us before ? </Text>
               <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -235,8 +232,10 @@ const RegisterScreen = () => {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </SafeAreaView>
     </ScrollView>
+    </KeyboardAvoidingView>
+    </>
   );
 };
 
