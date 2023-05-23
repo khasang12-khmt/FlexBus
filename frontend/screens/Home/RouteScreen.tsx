@@ -194,7 +194,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
       />
       <CustomNavigationHeader name="Search Result" navigateBackEnable={true} />
       <View className="mx-4 pb-3">
-        {routeFilterButtons && routeFilterButtons.length >= 1 && (
+        {routeFilterButtons && routeFilterButtons.length > 1 && (
           <SegmentedButtons
             value={busCnt}
             onValueChange={setBusCnt}

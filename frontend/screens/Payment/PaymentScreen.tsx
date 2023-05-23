@@ -107,7 +107,7 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 				const data = {
 					userId: userId,
 					transactionGroup: busStepInfo.uuid,
-					busInfo: busStepInfo_nonUUID,
+					busInfo: {...busStepInfo_nonUUID,price: isStudent?"3000":"7000"},
 					payment: {
 						'class': isStudent ? 'Student' : 'Economy',
 						'method': 'Credit card',

@@ -44,7 +44,7 @@ const AutoComplete:React.FC<AutoCompleteProps> = ({
   }, 1000);
 
   return (
-    <View>
+    <View className="-top-12">
       <Searchbar
         className="mx-4 rounded-xl z-999 bg-white border-sky-100 border"
         placeholder="Find Location"

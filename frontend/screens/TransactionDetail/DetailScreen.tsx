@@ -106,7 +106,7 @@ const DetailScreen = () => {
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                        <Text style={{ color: '#001356', fontSize: 13}}>
+                        <Text style={{ color: '#001356', fontSize: 12}}>
                             Show this barcode to ticket controller when get on bus
                         </Text>
                         <Ionicons name="md-help-circle" size={18} color="#001356" style={{marginLeft: 3}}/>
