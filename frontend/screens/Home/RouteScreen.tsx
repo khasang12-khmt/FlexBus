@@ -78,7 +78,10 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ navigation, route }) => {
           // Extract the relevant information from the response
           let routes = data.routes;
           // Use Fake data instead of real data if limit exceeded
-          if (data.status == "OVER_QUERY_LIMIT") routes = routeData.routes;
+          if (data.status == "OVER_QUERY_LIMIT") {
+            alert("Google API daily query exceeded. The data shown will not be accurate as it is hardcoded for testing purpose.");
+            routes = routeData.routes;
+          }
 
           parseRoute(routes);
 
