@@ -40,6 +40,7 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
         (state: RootState) => state.user.id
     );
 	const busStepInfo = route.params;
+	const currentYear = new Date().getFullYear().toString().slice(-2);
 	const formik = useFormik({
         initialValues: {
             cardNumber: '',
@@ -61,7 +62,13 @@ const PaymentScreen: React.FC<PaymentStackScreenNavigationProp> = ({navigation, 
 				.matches(/^[0-9]{3}$/, 'CVV must be 3 digits'),
 			expiryDate: Yup
 				.string()
-				.required('Expiry date is required'),
+				.required('Expiry date is required')
+				.matches(/^(0[1-9]|1[0-2]) \/ [0-9][0-9]$/, 'Expiry date must be in format mm / yy')
+				.test('expiryDate', 'Year must be equal or greater than the current year', (value) => {
+					if (!value) return true;
+					const [_, year] = value.split(' / ');
+					return year >= currentYear
+				})
         }),
         onSubmit: async (values) => {
             try {

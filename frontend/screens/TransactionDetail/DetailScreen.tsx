@@ -51,7 +51,7 @@ const DetailScreen = () => {
                     <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#001356', justifyContent: 'center', alignItems: 'center', marginBottom: 15 }}>
                         <Text style={{ color: '#fff', fontSize: 45 }}>{item.bus_no}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{item.timestart}</Text>
                             <Text style={{ fontSize: 12, color: '#767680', textAlign: 'center'}}>{item.departure}</Text>
@@ -63,6 +63,7 @@ const DetailScreen = () => {
 								height: 36,
 								width: 100,
 								resizeMode: "contain",
+                                marginHorizontal: 5
 							}} />
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>{item.timeend}</Text>
@@ -89,19 +90,19 @@ const DetailScreen = () => {
                             <Text style={{fontWeight: 'bold', color: '#767680', fontSize: 12}}>{item.timestamp}</Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
-                        <Text>Transaction code</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={{fontWeight: 'bold', fontSize: 16}}>{item.code}</Text>
-                            <TouchableOpacity onPress={handleCopyCode} style={{marginLeft: 5}}>
-                                <Ionicons name="copy-outline" size={16} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 5}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', width: 250, justifyContent: 'space-between', marginBottom: 10}}>
                         <Text>Payment method</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>    
                             <Text style={{marginRight: 3}}>{item['payment-method']}</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: 250, marginBottom: 5}}>
+                        <Text style={{ marginBottom: 2 }}>Transaction code</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 12}}>{item.code}</Text>
+                            <TouchableOpacity onPress={handleCopyCode} style={{marginLeft: 5}}>
+                                <Ionicons name="copy-outline" size={16} />
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
